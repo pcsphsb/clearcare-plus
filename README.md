@@ -6,6 +6,22 @@ An AI-first patient navigation prototype: symptom check → find a doctor (or AI
 - Claude Pro was used for parallel development of the application code.
 - The workflow and decision-making/architecture process were directed by the student.
 
+## Live demo (GitHub Pages)
+The app is fully static, so it can be hosted on GitHub Pages and still talks to the live
+backend directly from the browser (Supabase Auth + Postgres + Edge Functions; the
+publishable/anon key in `script.js` is browser-safe and RLS protects the data).
+
+**Enable:** repo → Settings → Pages → Source: *Deploy from a branch* → `main` / `root`.
+**URL:** `https://pcsphsb.github.io/clearcare-plus/`
+
+Before demoing live, confirm:
+- The Supabase project is **active** (free projects pause when idle — open the dashboard to wake it).
+- Supabase Auth **email confirmation is OFF** (so demo sign-ups log in immediately).
+- Edge Functions `symptom-check` + `find-doctors` are **deployed** with CORS (see Edge Functions Setup).
+- `USE_N8N = false` (default) runs the standalone Supabase path; set `true` only to demo the n8n workflow live.
+
+> Note: GitHub Pages on a **private** repo requires GitHub Pro/Education; otherwise make the repo public.
+
 ## Pages
 | File | Purpose |
 |------|---------|
