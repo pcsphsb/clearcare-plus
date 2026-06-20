@@ -646,15 +646,14 @@ async function handleRegister(e){
   btn.disabled = false; btn.textContent = "Create Account";
   if (error){ banner("register-err", error.message); console.error(error); return; }
 
-  // Email confirmation is ON, so signUp does not create a session. The user must
-  // click the link we email them before they can log in. (signOut is a harmless
-  // no-op here in case any session exists.)
+  // Email confirmation is OFF, so signUp auto-creates a session. Sign out so the
+  // user must explicitly log in (matches the registration-completed -> login flow).
   await sb.auth.signOut();
-  console.log("✅ [Supabase] User created. Confirmation email sent.");
+  console.log("✅ [Supabase] User created");
 
   document.getElementById("register-form").reset();
   document.getElementById("rules").classList.add("hidden");
-  document.getElementById("login-msg-text").textContent = "Account created. Please check your email to confirm, then log in.";
+  document.getElementById("login-msg-text").textContent = "Account created. Please log in.";
   document.getElementById("login-msg").classList.remove("hidden");
   showView("login");
 }
@@ -671,15 +670,7 @@ async function handleLogin(e){
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
   btn.disabled = false; btn.textContent = "Sign In";
 
-  if (error || !data.user){
-    // When email confirmation is on, an unconfirmed user gets "Email not confirmed".
-    // Show that reason instead of the generic message so they know to check their inbox.
-    const msg = error && /email not confirmed/i.test(error.message)
-      ? "Please confirm your email first. Check your inbox for the confirmation link."
-      : "Invalid email or password. Please try again.";
-    banner("login-err", msg);
-    return;
-  }
+  if (error || !data.user){ banner("login-err", "Invalid email or password. Please try again."); return; }
   console.log("✅ [Supabase] Logged in -> homepage");
   window.location.href = "homepage.html";   // navigate to the homepage
 }
