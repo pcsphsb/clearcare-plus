@@ -1,6 +1,6 @@
-# MediCare+ — n8n Workflow (Process Mirror)
+# ClearCare+ — n8n Workflow (Process Mirror)
 
-> **Purpose:** n8n mirrors the *back-end process* of MediCare+. It does **not** own
+> **Purpose:** n8n mirrors the *back-end process* of ClearCare+. It does **not** own
 > login — Supabase Auth (in the app) does. n8n operates on the **data tables**
 > (`profiles`, `consultations`) and the **AI triage**, exactly the parts the BPMN
 > automates. Two views of one process: the app = what the user sees; n8n = what the
@@ -12,7 +12,7 @@
 
 | Door | What | Who uses it |
 |------|------|-------------|
-| **Auth API** (GoTrue) | sign-up, login, password hashing, `auth.users` | the MediCare+ app (`supabase-js`) |
+| **Auth API** (GoTrue) | sign-up, login, password hashing, `auth.users` | the ClearCare+ app (`supabase-js`) |
 | **Database API** (PostgREST) | normal tables: `profiles`, `consultations`, future `doctors` | **n8n** |
 
 n8n's **Supabase node** uses the Database door only. So n8n mirrors the process by
@@ -27,13 +27,13 @@ freely.
 
 ## ⚡ END-TO-END BUILDER PROMPT (paste into n8n's AI workflow builder)
 
-This single prompt tells n8n's AI builder to generate the **whole MediCare+ process**
+This single prompt tells n8n's AI builder to generate the **whole ClearCare+ process**
 (registration mirror + symptom triage + doctor matching + booking) with Supabase
 connections — not just the chatbot. After it builds, you set the credentials
 (Supabase = service_role key; AI = Groq) on the generated nodes.
 
 ```
-Build one n8n workflow called "MediCare+ End-to-End Process" that mirrors a health-insurance doctor-booking process and connects to Supabase (Postgres). Create THREE flows in the same workflow:
+Build one n8n workflow called "ClearCare+ End-to-End Process" that mirrors a health-insurance doctor-booking process and connects to Supabase (Postgres). Create THREE flows in the same workflow:
 
 FLOW 1 — SYMPTOM TRIAGE + DOCTOR MATCHING (main flow):
 1. Webhook trigger, POST, path "symptom-check", set to respond via a "Respond to Webhook" node. It receives JSON: user_id, symptoms, language.
@@ -87,7 +87,7 @@ user up; it then calls this webhook so n8n can run the downstream automation.
 | 2 | **Edit Fields (Set)** | map incoming JSON → `user_id`, `email`, `first_name`, `last_name`, `language` | Normalize the payload |
 | 3 | **IF** | check `user_id` and `email` are not empty | Validate (mirrors a process gate) |
 | 4 | **Supabase** | Operation: *Upsert* row in `profiles` (match on `id`) | Enrich/confirm the profile row in the DB |
-| 5 | **Send Email** *(or Set, to simulate)* | to `email`, "Welcome to MediCare+" | The "Confirmation/Welcome" step |
+| 5 | **Send Email** *(or Set, to simulate)* | to `email`, "Welcome to ClearCare+" | The "Confirmation/Welcome" step |
 | 6 | **Respond to Webhook** | body `{ "status": "ok", "user_id": "..." }` | Tell the app it succeeded |
 
 ### Incoming payload (what the app sends)
@@ -179,7 +179,7 @@ create policy "select own consultations" on public.consultations
 > even WITHOUT the structured output parser.
 
 ```
-You are the triage assistant for MediCare+, a health-insurance navigation app for immigrants in Germany. You help users reach the RIGHT TYPE of doctor. You are a navigator, NOT a diagnostician.
+You are the triage assistant for ClearCare+, a health-insurance navigation app for immigrants in Germany. You help users reach the RIGHT TYPE of doctor. You are a navigator, NOT a diagnostician.
 
 RULES:
 1. Recommend ONE doctor type only (e.g. General Practitioner, Dermatologist, Cardiologist, ENT, Orthopedist, Gynecologist, Pediatrician, Psychiatrist, Ophthalmologist, Dentist, Urologist, Gastroenterologist).

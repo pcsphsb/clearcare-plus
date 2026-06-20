@@ -1,4 +1,4 @@
-# MediCare+ — Doctor Data Architecture (free, ArztAPI-pluggable)
+# ClearCare+ — Doctor Data Architecture (free, ArztAPI-pluggable)
 
 > **Problem:** There is no open German doctor database (GDPR). The real product,
 > **ArztAPI**, costs ~€799/month. **Goal:** build a *pluggable* architecture that runs
