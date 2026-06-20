@@ -2,6 +2,10 @@
 
 An AI-first patient navigation prototype: symptom check → find a doctor (or AI-recommended specialist) → book/reschedule an appointment. Multilingual UI (English, Spanish, German, Turkish, Hindi, Arabic). Auth, data, and AI run on Supabase (Postgres + Edge Functions); the same flows are also mapped in n8n for the live demo.
 
+## AI Assistance Disclosure
+- Claude Pro was used for parallel development of the application code.
+- The workflow and decision-making/architecture process were directed by the student.
+
 ## Pages
 | File | Purpose |
 |------|---------|
