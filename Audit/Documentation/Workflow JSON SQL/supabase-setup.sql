@@ -254,27 +254,21 @@ alter table public.appointments
 -- =====================================================================
 
 -- =====================================================================
--- RESET-FOR-DEMO HELPER  (DESTRUCTIVE — all commented out; run by hand)
+-- RESET-FOR-DEMO HELPER  (DESTRUCTIVE — commented out on purpose)
 -- ---------------------------------------------------------------------
--- During testing the `id` sequences keep climbing (e.g. appointment id 27+)
--- because Postgres identity sequences never roll back on DELETE — gaps are
--- normal and fine in real use. Use this ONLY when you want a clean slate for a
--- screenshot/presentation. `truncate ... restart identity` empties the table AND
--- resets its id counter to 1. Run the day before the demo, after your last test.
+-- Why: during testing the `id` counters keep climbing (e.g. appointment id 27+)
+-- because Postgres identity sequences never roll back on DELETE. Gaps are normal
+-- and fine in real use. Run this ONLY when you want a clean slate (id back to 1)
+-- for a screenshot/presentation — ideally the day before, after your last test.
 --
--- Safe because nothing has a foreign key POINTING AT these tables
--- (appointments_cancel.original_appointment_id and appointments_reschedule.
--- appointment_id are plain bigint copies, not FKs). Do NOT truncate `doctors`
--- or `profiles` — doctors.id is the FK target your bookings reference, and
--- profiles mirrors your Auth users.
+-- Safe: nothing has a foreign key POINTING AT these three tables. Do NOT add
+-- `doctors` or `profiles` here (doctors.id is the FK target your bookings use,
+-- and profiles mirrors your Auth users).
 --
--- Clear bookings + both audit logs and restart their id counters at 1:
+-- HOW TO RUN: copy ONLY the three lines below into the SQL editor and delete the
+-- leading "-- " from each. Do NOT copy any of the sentence lines above.
+--
 --   truncate table public.appointments            restart identity;
 --   truncate table public.appointments_cancel     restart identity;
 --   truncate table public.appointments_reschedule restart identity;
---
--- Already deleted the rows and only want the counter back to 1 (no data loss):
---   alter table public.appointments            alter column id restart with 1;
---   alter table public.appointments_cancel     alter column id restart with 1;
---   alter table public.appointments_reschedule alter column id restart with 1;
 -- =====================================================================
