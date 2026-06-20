@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!--
+  ClearCare+  -  index.html
+  Entry page: Login + Registration (Supabase Auth). On login -> homepage.html.
+  Icons: Font Awesome (loaded via @import in style.css).
+  Styles: style.css   |   Logic: script.js
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ClearCare+</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="screen">
+
+  <div id="config" class="config hidden">⚠️ Set your SUPABASE_URL in script.js first.</div>
+
+  <!-- ============ LOGIN VIEW ============ -->
+  <div id="view-login">
+    <div class="header small">
+      <div class="badge"><i class="fa-solid fa-heart-pulse" style="font-size:32px;color:#fff"></i></div>
+      <h1>ClearCare+</h1>
+      <p>Clear words, Clear care.</p>
+    </div>
+    <div class="body">
+      <div id="login-msg" class="banner ok hidden">
+        <i class="fa-solid fa-circle-check"></i><span id="login-msg-text" style="flex:1"></span>
+        <button class="x" onclick="clearLoginMsg()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <h2 class="section">Welcome back</h2>
+      <form id="login-form" novalidate style="display:flex;flex-direction:column;gap:16px;">
+        <div class="field">
+          <label>Email address</label>
+          <input type="email" id="l-email" placeholder="you@example.com" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="l-password" placeholder="Enter your password" style="padding-right:44px;" />
+            <button type="button" class="pw-toggle" onclick="togglePw('l-password',this)"><i class="fa-solid fa-eye"></i></button>
+          </div>
+        </div>
+        <div id="login-err" class="banner err hidden"></div>
+        <button type="submit" id="login-btn" class="btn btn-primary">Sign In</button>
+      </form>
+      <div class="divider">New here?</div>
+      <button class="btn btn-outline" onclick="showView('register')">Create an Account</button>
+      <p class="tiny">By continuing you agree to our <a class="link">Terms</a> &amp; <a class="link">Privacy Policy</a></p>
+    </div>
+  </div>
+
+  <!-- ============ REGISTER VIEW ============ -->
+  <div id="view-register" class="hidden">
+    <div class="header">
+      <button class="back" onclick="showView('login')" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="badge"><i class="fa-solid fa-heart-pulse" style="font-size:28px;color:#fff"></i></div>
+      <h1 data-i18n="reg_create_title">Create Account</h1>
+      <p data-i18n="reg_join">Join ClearCare+ today</p>
+    </div>
+    <form id="register-form" class="body" novalidate>
+      <div class="row2">
+        <div class="field">
+          <label data-i18n="reg_first">First name</label>
+          <input type="text" id="r-first" placeholder="Jane" />
+          <div class="field-err" id="err-r-first"></div>
+        </div>
+        <div class="field">
+          <label data-i18n="reg_last">Last name</label>
+          <input type="text" id="r-last" placeholder="Doe" />
+          <div class="field-err" id="err-r-last"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label data-i18n="reg_email">Email ID</label>
+        <input type="email" id="r-email" placeholder="jane.doe@example.com" />
+        <div class="field-err" id="err-r-email"></div>
+      </div>
+      <div class="field">
+        <label data-i18n="reg_password">Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="r-password" placeholder="Create a strong password" style="padding-right:44px;" oninput="renderRules()" />
+          <button type="button" class="pw-toggle" onclick="togglePw('r-password',this)"><i class="fa-solid fa-eye"></i></button>
+        </div>
+        <div id="rules" class="rules hidden">
+          <div class="rule" id="rule-len"><span class="dot"></span><span data-i18n="pw_len">At least 8 characters</span></div>
+          <div class="rule" id="rule-num"><span class="dot"></span><span data-i18n="pw_num">Contains at least 1 number</span></div>
+          <div class="rule" id="rule-spec"><span class="dot"></span><span data-i18n="pw_spec">Contains at least 1 special character</span></div>
+        </div>
+        <div class="field-err" id="err-r-password"></div>
+      </div>
+      <div class="field">
+        <label data-i18n="dob">Date of birth</label>
+        <input type="text" id="r-birth" placeholder="DD/MM/YYYY" maxlength="10" oninput="formatBirth(this)" />
+        <div class="field-err" id="err-r-birth"></div>
+      </div>
+      <div class="field">
+        <label data-i18n="pref_lang">Preferred language</label>
+        <select id="r-language" onchange="applyI18n(this.value)">
+          <option value="" data-i18n="reg_select_lang">Select a language</option>
+          <option value="English">English</option>
+          <option value="Spanish">Spanish</option>
+          <option value="German">German</option>
+          <option value="Hindi">Hindi</option>
+          <option value="Turkish">Turkish</option>
+          <option value="Arabic">Arabic</option>
+        </select>
+        <div class="field-err" id="err-r-language"></div>
+      </div>
+      <div id="register-err" class="banner err hidden"></div>
+      <button type="submit" id="register-btn" class="btn btn-primary" data-i18n="reg_create_btn">Create Account</button>
+      <p class="tiny"><span data-i18n="reg_have">Already have an account?</span> <a class="link" onclick="showView('login')" data-i18n="reg_signin">Sign in</a></p>
+    </form>
+  </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>

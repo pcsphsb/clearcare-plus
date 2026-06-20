@@ -1,0 +1,69 @@
+{
+  "name": "ClearCare+ Book Appointment",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "book-appointment",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "bk-webhook-001",
+      "name": "Book Appointment Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 300],
+      "webhookId": "bk-webhook-uuid-001"
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "create",
+        "tableId": "appointments",
+        "dataToSend": "defineBelow",
+        "fieldsUi": {
+          "fieldValues": [
+            { "fieldId": "user_id", "fieldValue": "={{ $json.body.user_id }}" },
+            { "fieldId": "doctor_id", "fieldValue": "={{ $json.body.doctor_id }}" },
+            { "fieldId": "doctor_name", "fieldValue": "={{ $json.body.doctor_name }}" },
+            { "fieldId": "doctor_specialty", "fieldValue": "={{ $json.body.doctor_specialty }}" },
+            { "fieldId": "doctor_address", "fieldValue": "={{ $json.body.doctor_address }}" },
+            { "fieldId": "datetime", "fieldValue": "={{ $json.body.datetime }}" },
+            { "fieldId": "status", "fieldValue": "confirmed" },
+            { "fieldId": "note_original", "fieldValue": "={{ $json.body.note_original }}" },
+            { "fieldId": "note_de", "fieldValue": "={{ $json.body.note_de }}" }
+          ]
+        }
+      },
+      "id": "bk-supabase-002",
+      "name": "Save Appointment",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "bk-respond-003",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [480, 300]
+    }
+  ],
+  "connections": {
+    "Book Appointment Webhook": {
+      "main": [[{ "node": "Save Appointment", "type": "main", "index": 0 }]]
+    },
+    "Save Appointment": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {},
+  "pinData": {},
+  "active": false
+}

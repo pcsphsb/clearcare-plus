@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+  ClearCare+  -  booking.html  (guarded)
+  Book or reschedule an appointment with a doctor chosen on doctors.html
+  (passed via sessionStorage 'mc_doctor').
+
+  By default (USE_N8N = false) the booking is written directly to the Supabase
+  `appointments` table; with USE_N8N = true it is posted to the n8n
+  "book-appointment" webhook instead (live demo). See handleBooking() in script.js.
+  Doctors with no published opening hours show an email-request fallback instead.
+  Styles: style.css   |   Logic: script.js
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ClearCare+ - Book Appointment</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="screen">
+  <div id="booking-page">
+
+    <div class="header small">
+      <button class="back" onclick="window.location.href='doctors.html'" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="badge"><i class="fa-solid fa-calendar-check" style="font-size:30px;color:#fff"></i></div>
+      <h1 data-i18n="bk_title">Book Appointment</h1>
+      <p data-i18n="bk_sub">Pick a time that works for you.</p>
+    </div>
+
+    <div class="sc-body">
+
+      <!-- Doctor summary (always shown) -->
+      <div class="summary" id="bk-summary">
+        <div class="sname"><i class="fa-solid fa-user-doctor" style="color:var(--teal)"></i> <span id="bk-doc-name">Doctor</span></div>
+        <div class="sspec" id="bk-doc-spec"></div>
+        <div class="saddr" id="bk-doc-addr"></div>
+        <div class="saddr" id="bk-doc-hours"></div>
+      </div>
+
+      <!-- Booking form: shown when the doctor has published opening hours -->
+      <div id="bk-form" style="display:flex;flex-direction:column;gap:16px;">
+        <div class="field">
+          <label data-i18n="bk_date">Date</label>
+          <input type="date" id="bk-date" />
+        </div>
+        <div class="field">
+          <label data-i18n="bk_time">Time</label>
+          <select id="bk-time">
+            <option value="" data-i18n="select_time">Select a time</option>
+          </select>
+          <div class="desc" id="bk-avail-note" data-i18n="bk_avail_note" style="font-size:12px;color:var(--muted);margin-top:6px;"></div>
+        </div>
+
+        <div id="bk-error" class="banner err hidden"></div>
+        <button class="btn btn-primary" id="bk-confirm" onclick="handleBooking()" data-i18n="bk_confirm_btn">Confirm booking</button>
+      </div>
+
+      <!-- Email-request mode: shown when the doctor has NO published availability.
+           We can't talk to the practice, so "Book appointment" opens a personal mailto draft. -->
+      <div id="bk-email-mode" style="display:none;flex-direction:column;gap:16px;">
+        <p class="desc" id="bk-no-hours" data-i18n="bk_no_hours" style="font-size:13px;color:var(--muted);line-height:1.5;"></p>
+        <button class="btn btn-primary" id="bk-email-btn" onclick="bookByEmail()" data-i18n="bk_email_btn">Request appointment by email</button>
+      </div>
+
+      <!-- Confirmation -->
+      <div id="bk-done" class="confirm-box hidden">
+        <div class="cbig"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="ct" data-i18n="bk_confirmed">Appointment confirmed!</div>
+        <div class="cdetail">With <strong id="bk-confirm-name"></strong><br><span id="bk-confirm-when"></span></div>
+        <div class="cnote" data-i18n="bk_note">Bring your insurance card and a referral (Überweisung) if a specialist needs one.</div>
+
+        <button class="btn btn-primary" onclick="window.location.href='homepage.html'" style="margin-top:12px;" data-i18n="back_home">Back to home</button>
+      </div>
+
+      <p class="disclaimer" data-i18n="bk_disclaimer">This is a prototype booking. It records your request in the system. Real availability would come from a doctor scheduling API.</p>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>

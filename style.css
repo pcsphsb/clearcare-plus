@@ -1,0 +1,307 @@
+/* Font Awesome (loaded via CSS, must be the first rule) */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
+
+/* =========================================================================
+   ClearCare+  -  shared styles for all pages
+   ========================================================================= */
+:root{
+  --teal-dark:#0a6b85; --teal:#12a89d; --bg:#e8f0f5; --card:#fff;
+  --field:#f0f6f9; --border:#d9e4ea; --text:#1f2d33; --muted:#5b7a8a;
+  --destructive:#d65745; --emerald:#10b981;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:16px;}
+/* Fixed iPhone frame (390 x 844, iPhone 14/15). Content scrolls inside; any
+   leftover room below the content is just white space for now. */
+/* Device frame - iPhone-style black bezel. It clips (overflow:hidden) so the
+   screen's rounded corners contain the scrollbar; the .screen inside scrolls. */
+.phone{width:390px;max-width:100%;height:844px;max-height:calc(100vh - 24px);
+  background:#0b0b0d;border:12px solid #0b0b0d;border-radius:52px;
+  box-shadow:0 30px 60px -12px rgba(10,30,45,.5), inset 0 0 0 2px #2c2c30;
+  overflow:hidden;position:relative;}
+
+/* The screen = scroll container inside the bezel. Scrollbar is HIDDEN (mobile
+   style): you can still scroll, but no visible bar and no reserved gutter - so
+   the content stays perfectly centered. The floating back-to-top button covers
+   "jump to top". */
+.screen{height:100%;overflow-y:auto;overflow-x:hidden;background:var(--card);
+  border-radius:40px;
+  scrollbar-width:none;-ms-overflow-style:none;}
+
+/* Hide the scrollbar on the screen + bottom sheets (WebKit/Chromium) */
+.screen::-webkit-scrollbar,
+.sheet::-webkit-scrollbar{width:0;height:0;display:none;}
+.sheet{scrollbar-width:none;-ms-overflow-style:none;}
+
+/* Gradient header */
+.header{background:linear-gradient(160deg,var(--teal-dark) 0%,var(--teal) 100%);
+  color:#fff;text-align:center;position:relative;padding:48px 24px 32px;}
+.header.small{padding:48px 24px 28px;}
+.badge{width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.header h1{margin:0;font-size:2rem;font-weight:700;}
+.header.small h1{font-size:1.7rem;}
+.header p{margin:8px 0 0;color:rgba(255,255,255,.65);font-size:14px;}
+.back{position:absolute;top:44px;left:20px;width:40px;height:40px;border:none;
+  border-radius:16px;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;}
+.back:hover{background:rgba(255,255,255,.3);}
+
+/* Body / form */
+.body{padding:32px 28px 40px;display:flex;flex-direction:column;gap:20px;}
+h2.section{margin:0;font-size:1.4rem;font-weight:700;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+input,select{width:100%;border:1.5px solid var(--border);background:var(--field);
+  border-radius:16px;padding:15px 16px;font-size:14px;color:var(--text);outline:none;
+  transition:border-color .15s,box-shadow .15s;}
+input:focus,select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(18,168,157,.18);}
+input.bad,select.bad{border-color:var(--destructive);}
+.pw-wrap{position:relative;}
+.pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--muted);padding:0;}
+.field-err{color:var(--destructive);font-size:10px;padding-left:4px;min-height:12px;}
+
+/* Password rules box */
+.rules{background:var(--field);border:1px solid var(--border);border-radius:16px;
+  padding:12px 16px;display:flex;flex-direction:column;gap:6px;}
+.rule{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);}
+.rule.ok{color:#047857;}
+.rule .dot{width:14px;height:14px;border-radius:50%;border:2px solid #cbd5d8;flex:none;}
+.rule.ok .dot{border-color:var(--emerald);background:var(--emerald);}
+
+/* Buttons */
+.btn{width:100%;border:none;border-radius:16px;padding:15px;font-size:14px;
+  font-weight:600;cursor:pointer;transition:transform .05s,opacity .15s;}
+.btn:active{transform:scale(.97);}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
+.btn-primary{background:linear-gradient(135deg,var(--teal-dark),var(--teal));color:#fff;}
+.btn-outline{background:#eef5f8;color:var(--teal-dark);border:2px solid rgba(18,168,157,.25);}
+
+.divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border);}
+
+.banner{border-radius:16px;padding:12px 16px;font-size:13px;display:flex;
+  align-items:center;gap:8px;}
+.banner.ok{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;}
+.banner.err{background:#fef2f2;border:1px solid #fecaca;color:var(--destructive);font-size:12px;}
+.banner .x{margin-left:auto;background:none;border:none;cursor:pointer;font-size:18px;color:inherit;}
+
+.tiny{font-size:11px;color:var(--muted);text-align:center;margin:0;}
+.link{color:var(--teal-dark);cursor:pointer;text-decoration:none;}
+.link:hover{text-decoration:underline;}
+
+/* Config warning */
+.config{background:#fef2f2;border:1px solid #fecaca;color:#8a2a1c;border-radius:12px;
+  padding:10px 12px;font-size:12px;margin:16px 16px 0;}
+
+/* ===================== Dashboard / Homepage ===================== */
+.dash-top{display:flex;align-items:center;justify-content:space-between;padding:28px 24px 12px;}
+.dash-brand{display:flex;align-items:center;gap:8px;color:var(--teal-dark);font-weight:700;}
+.avatar{width:38px;height:38px;border-radius:12px;color:#fff;font-size:12px;font-weight:600;
+  background:linear-gradient(135deg,var(--teal-dark),var(--teal));border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;}
+.hero{margin:0 20px 20px;border-radius:24px;overflow:hidden;
+  background:linear-gradient(135deg,var(--teal-dark) 0%,var(--teal) 100%);color:#fff;padding:24px;}
+.hero .date{font-size:12px;color:rgba(255,255,255,.6);margin:0 0 4px;}
+.hero h2{margin:0;font-size:1.55rem;line-height:1.2;font-weight:700;}
+.hero .sub{font-size:14px;color:rgba(255,255,255,.7);margin:8px 0 0;}
+.hero .quote{margin:16px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.15);
+  font-size:12px;font-style:italic;color:rgba(255,255,255,.55);}
+.sec-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  margin:0 0 12px;padding:0 20px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px;margin-bottom:20px;}
+.qcard{background:#f5f9fc;border:1px solid #e3edf2;border-radius:16px;padding:16px;}
+.qcard .ic{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;margin-bottom:12px;font-size:18px;}
+.qcard .t{font-size:14px;font-weight:600;}
+.qcard .s{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* Action rows (the hooks for future features) */
+.actions{display:flex;flex-direction:column;gap:10px;padding:0 20px;margin-bottom:24px;}
+.action{display:flex;align-items:center;gap:12px;background:#f5f9fc;border:1px solid #e3edf2;
+  border-radius:16px;padding:14px 16px;cursor:pointer;text-align:left;width:100%;
+  transition:transform .05s,box-shadow .15s;}
+.action:hover{box-shadow:0 4px 12px rgba(10,60,80,.08);}
+.action:active{transform:scale(.98);}
+.action .ic{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;font-size:18px;flex:none;}
+.action .t{font-size:14px;font-weight:600;}
+.action .s{font-size:12px;color:var(--muted);margin-top:2px;}
+.action .chev{margin-left:auto;color:var(--muted);}
+
+.signout{margin:8px 20px 28px;width:calc(100% - 40px);background:none;
+  border:1px solid rgba(214,87,69,.3);color:var(--destructive);border-radius:16px;
+  padding:14px;font-size:14px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px;}
+.signout:hover{background:#fef2f2;}
+
+/* ===================== Profile form panel (first-time setup) ===================== */
+.panel{margin:0 20px 20px;background:#f5f9fc;border:1px solid #e3edf2;
+  border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:16px;}
+.panel h3{margin:0;font-size:1.05rem;font-weight:700;}
+.panel .desc{margin:-8px 0 0;font-size:13px;color:var(--muted);line-height:1.4;}
+
+/* ===================== Profile bottom sheet (avatar click) =====================
+   Positioned ABSOLUTE inside the .phone frame (which is position:relative and
+   clips), so sheets stay within the device screen instead of the viewport. */
+.sheet-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:70;}
+.sheet{position:absolute;bottom:0;left:0;right:0;width:100%;
+  background:var(--card);border-radius:2rem 2rem 0 0;z-index:75;
+  box-shadow:0 -10px 40px rgba(0,0,0,.25);padding-bottom:12px;
+  max-height:92%;overflow-y:auto;}
+.sheet-handle{width:40px;height:4px;border-radius:999px;background:var(--border);margin:14px auto 6px;}
+.profile-card{margin:6px 20px 16px;border-radius:18px;padding:18px;display:flex;
+  align-items:center;gap:14px;background:linear-gradient(135deg,var(--teal-dark),var(--teal));color:#fff;}
+.profile-card .pa{width:54px;height:54px;border-radius:16px;background:rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:600;flex:none;}
+.profile-card .pn{font-weight:600;}
+.profile-card .pe{font-size:12px;color:rgba(255,255,255,.7);}
+.profile-card .close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.7);
+  font-size:20px;cursor:pointer;align-self:flex-start;}
+.info-list{padding:0 20px;}
+.info-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--border);font-size:14px;}
+.info-row:last-child{border-bottom:none;}
+.info-row .k{color:var(--muted);}
+.info-row .v{font-weight:600;text-align:right;}
+
+/* Tappable overview cards (Appointments / Records) */
+.qcard.tappable{position:relative;cursor:pointer;transition:transform .05s,box-shadow .15s;}
+.qcard.tappable:hover{box-shadow:0 4px 12px rgba(10,60,80,.08);}
+.qcard.tappable:active{transform:scale(.98);}
+.qcard.tappable:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+.qchev{position:absolute;top:14px;right:14px;color:var(--muted);font-size:12px;}
+
+/* Appointment / record lists inside the bottom sheets */
+.sheet-list{padding:0 20px 16px;display:flex;flex-direction:column;gap:12px;}
+/* Inline appointments list on the homepage (fills the space below the actions) */
+.home-appts{padding:0 20px 24px;display:flex;flex-direction:column;gap:12px;}
+.empty-note{color:var(--muted);font-size:14px;text-align:center;padding:24px 0;}
+.list-item{background:#f5f9fc;border:1px solid #e3edf2;border-radius:16px;padding:14px 16px;}
+.list-item.past{opacity:.6;}
+.li-title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.li-title i{color:var(--teal-dark);}
+.li-sub{font-size:13px;color:var(--teal-dark);margin-top:2px;}
+.li-when{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4;}
+.li-addr{font-size:12px;color:var(--muted);margin-top:2px;}
+.li-note{margin-top:10px;background:#fff;border:1px dashed var(--teal);border-radius:12px;padding:10px 12px;}
+.li-note-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.li-note-label{font-size:11px;font-weight:600;color:var(--teal-dark);display:inline-flex;align-items:center;gap:6px;}
+.li-note-text{font-size:13px;margin:6px 0 0;color:var(--text);font-style:italic;line-height:1.45;white-space:pre-wrap;}
+.note-copy{flex:none;font-size:12px;color:var(--teal-dark);border:1px solid var(--border);
+  border-radius:8px;padding:4px 9px;background:#f5f9fc;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px;}
+.note-copy:hover{background:#e0eef2;}
+.li-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.li-actions .dbtn{font-size:13px;color:var(--teal-dark);border:1px solid var(--border);
+  border-radius:10px;padding:6px 12px;background:#fff;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;}
+.li-actions .dbtn:hover{background:#eef5f8;}
+.li-actions .dbtn.danger{color:var(--destructive);border-color:rgba(214,87,69,.3);background:#fef2f2;}
+.li-actions .dbtn.danger:hover{background:#fde6e3;}
+
+/* ===================== Symptom Checker page ===================== */
+.sc-body{padding:24px 24px 32px;display:flex;flex-direction:column;gap:16px;}
+.sc-intro{font-size:14px;color:var(--muted);line-height:1.5;margin:0;}
+textarea#s-input{width:100%;min-height:120px;resize:vertical;border:1.5px solid var(--border);
+  background:var(--field);border-radius:16px;padding:14px 16px;font-size:14px;
+  font-family:inherit;color:var(--text);outline:none;}
+textarea#s-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(18,168,157,.18);}
+.sc-tools{display:flex;gap:10px;}
+.sc-tools .btn{flex:1;}
+.mic{flex:none;width:52px;border:1.5px solid var(--border);background:#eef5f8;
+  color:var(--teal-dark);border-radius:14px;cursor:pointer;font-size:16px;}
+.mic:hover{background:#e0eef2;}
+.sc-loading{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;}
+
+.result{border:1px solid var(--border);border-radius:18px;padding:18px;background:#f5f9fc;
+  display:flex;flex-direction:column;gap:10px;}
+.result .doctor{font-size:1.25rem;font-weight:700;display:flex;align-items:center;gap:10px;}
+.result .doctor .di{color:var(--teal);}
+.badge-urg{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;
+  padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;}
+.badge-urg.routine{background:#ecfdf5;color:#047857;}
+.badge-urg.soon{background:#fef3e8;color:#b45309;}
+.result .expl{font-size:14px;color:var(--text);line-height:1.5;margin:0;}
+.result .refer{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+
+.emergency-box{border:1.5px solid #f5b5b0;background:#fef2f2;border-radius:18px;padding:18px;
+  display:flex;flex-direction:column;gap:8px;}
+.emergency-box .et{color:#b91c1c;font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:8px;}
+.emergency-box .call{background:#dc2626;color:#fff;border:none;border-radius:14px;padding:12px;
+  font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
+
+.disclaimer{font-size:11px;color:var(--muted);text-align:center;line-height:1.4;margin:4px 0 0;}
+
+/* ===================== Find a Doctor page ===================== */
+.doc-context{background:#eef8f6;border:1px solid var(--teal);border-radius:12px;
+  padding:10px 14px;font-size:13px;color:#0a6b85;}
+.doc-list{display:flex;flex-direction:column;gap:12px;}
+.doc-card{border:1px solid var(--border);border-radius:16px;padding:16px;background:#f5f9fc;}
+.doc-card .dname{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;}
+.doc-card .dspec{font-size:12px;color:var(--teal-dark);font-weight:600;margin-top:3px;}
+.doc-card .daddr{font-size:13px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:6px;}
+.doc-card .daddr i{margin-top:1px;}
+.doc-card .daddr.muted{opacity:.7;font-style:italic;}
+.doc-card .dactions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.doc-card .dbtn{font-size:13px;color:var(--teal-dark);text-decoration:none;display:inline-flex;
+  align-items:center;gap:6px;border:1px solid var(--border);border-radius:10px;padding:7px 12px;background:#fff;}
+.doc-card .dbtn:hover{background:#eef5f8;}
+.doc-card .locked{margin-top:8px;font-size:13px;color:var(--muted);display:flex;align-items:center;
+  gap:8px;cursor:pointer;}
+.doc-card .locked .premium{background:#fdf3e8;color:#b45309;border-radius:6px;padding:1px 7px;
+  font-size:9px;font-weight:700;letter-spacing:.05em;}
+
+/* German "show your doctor" box (symptom result) */
+.de-box{background:#fff;border:1px dashed var(--teal);border-radius:14px;padding:12px 14px;
+  display:flex;flex-direction:column;gap:8px;}
+.de-label{font-size:12px;font-weight:600;color:var(--teal-dark);display:flex;align-items:center;gap:6px;}
+.de-text{font-size:14px;margin:0;color:var(--text);font-style:italic;line-height:1.45;}
+.de-box .dbtn{align-self:flex-start;font-size:13px;color:var(--teal-dark);border:1px solid var(--border);
+  border-radius:10px;padding:6px 12px;background:#f5f9fc;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+
+/* ===================== Booking page ===================== */
+.field textarea{width:100%;border:1.5px solid var(--border);background:var(--field);border-radius:16px;
+  padding:14px 16px;font-size:14px;font-family:inherit;color:var(--text);outline:none;resize:vertical;min-height:90px;}
+.field textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(18,168,157,.18);}
+
+.summary{border:1px solid var(--border);border-radius:16px;padding:16px;background:#f5f9fc;}
+.summary .sname{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;}
+.summary .sspec{font-size:12px;color:var(--teal-dark);font-weight:600;margin-top:3px;}
+.summary .saddr{font-size:13px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:6px;}
+.confirm-box{border:1.5px solid #a7f3d0;background:#ecfdf5;border-radius:18px;padding:22px;text-align:center;
+  display:flex;flex-direction:column;gap:8px;}
+.confirm-box .cbig{font-size:42px;color:#10b981;}
+.confirm-box .ct{color:#047857;font-weight:700;font-size:1.2rem;}
+.confirm-box .cdetail{font-size:14px;color:var(--text);}
+.confirm-box .cnote{font-size:12px;color:var(--muted);margin-top:4px;}
+
+/* ===================== Confirm modal ===================== */
+.modal-backdrop{position:absolute;inset:0;background:rgba(8,30,40,.45);z-index:80;
+  display:flex;align-items:center;justify-content:center;padding:24px;}
+.modal{width:100%;max-width:320px;background:var(--card);border-radius:22px;
+  padding:22px 20px 18px;box-shadow:0 20px 50px rgba(0,0,0,.3);text-align:center;}
+.modal .m-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;
+  justify-content:center;margin:0 auto 12px;font-size:20px;background:#fdecea;color:var(--destructive);}
+.modal .m-msg{font-size:15px;color:var(--text);line-height:1.45;margin:0 0 18px;}
+.modal .m-actions{display:flex;flex-direction:column;gap:10px;}
+.btn-danger{background:var(--destructive);color:#fff;border:none;}
+.btn-danger:hover{filter:brightness(1.05);}
+
+/* ===================== Back-to-top button ===================== */
+/* Sticky inside the .phone scroll frame (bottom-right), so it follows the phone,
+   not the desktop viewport. */
+.to-top{position:sticky;bottom:20px;margin:-46px 16px 6px auto;width:46px;height:46px;border-radius:50%;
+  border:none;background:linear-gradient(135deg,var(--teal-dark),var(--teal));color:#fff;
+  font-size:18px;cursor:pointer;box-shadow:0 6px 18px rgba(10,60,80,.3);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:opacity .2s, visibility .2s, transform .1s;z-index:60;}
+.to-top.show{opacity:1;visibility:visible;}
+.to-top:hover{filter:brightness(1.05);}
+.to-top:active{transform:scale(.92);}
+
+.hidden{display:none;}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+  ClearCare+  -  doctors.html  (guarded)
+  Find a Doctor: filters the imported Supabase "doctors" table by postcode/city,
+  language and specialty, and renders the results as cards. For locations outside
+  the dataset it falls back to live OSM (the "find-doctors" Edge Function by
+  default, or the n8n webhook when USE_N8N = true).
+
+  "Find a Doctor" lists GPs; arriving from the Symptom Checker lists the AI's
+  recommended specialty (read from sessionStorage 'mc_specialty').
+
+  Icons: Font Awesome (via @import in style.css).
+  Styles: style.css   |   Logic: script.js
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ClearCare+ - Find a Doctor</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="screen">
+  <div id="doctors-page">
+
+    <div class="header small">
+      <button class="back" onclick="window.location.href='homepage.html'" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="badge"><i class="fa-solid fa-user-doctor" style="font-size:30px;color:#fff"></i></div>
+      <h1 data-i18n="doc_title">Find a Doctor</h1>
+      <p data-i18n="doc_sub">Doctors near you, from the open directory.</p>
+    </div>
+
+    <div class="sc-body">
+      <div id="doc-context" class="doc-context hidden"></div>
+
+      <div class="row2">
+        <div class="field">
+          <label data-i18n="postcode">Postcode</label>
+          <input type="text" id="doc-postcode" placeholder="e.g. 28195" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label data-i18n="city">City</label>
+          <input type="text" id="doc-city" placeholder="e.g. Bremen" />
+        </div>
+      </div>
+      <div class="field">
+        <label data-i18n="filter_language">Preferred language</label>
+        <select id="doc-language">
+          <option value="" data-i18n="any_language">Any language</option>
+          <option value="English">English</option>
+          <option value="Spanish">Español</option>
+          <option value="German">Deutsch</option>
+          <option value="Hindi">हिन्दी</option>
+          <option value="Turkish">Türkçe</option>
+          <option value="Arabic">العربية</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="doc-search" onclick="handleFindDoctors()">
+        <i class="fa-solid fa-magnifying-glass"></i>&nbsp; <span data-i18n="doc_search_btn">Find doctors near me</span>
+      </button>
+
+      <div id="doc-error" class="banner err hidden"></div>
+      <div id="doc-loading" class="sc-loading hidden"><i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="searching">Searching nearby doctors…</span></div>
+
+      <div id="doc-list" class="doc-list"></div>
+
+      <p class="disclaimer" data-i18n="doc_disclaimer">Doctor data from OpenStreetMap (open data). Coverage may be incomplete. This is a directory, not a booking guarantee.</p>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>

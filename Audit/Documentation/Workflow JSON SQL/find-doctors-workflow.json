@@ -1,0 +1,105 @@
+{
+  "name": "ClearCare+ Find Doctors (OSM)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "find-doctors",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "fd-webhook-001",
+      "name": "Find Doctors Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 300],
+      "webhookId": "fd-webhook-uuid-001"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://nominatim.openstreetmap.org/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "postalcode", "value": "={{ $json.body.postcode }}" },
+            { "name": "country", "value": "Germany" },
+            { "name": "format", "value": "json" },
+            { "name": "limit", "value": "1" }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "User-Agent", "value": "MediCarePlus/1.0 (student project)" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fd-geocode-002",
+      "name": "Geocode (Nominatim)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://overpass-api.de/api/interpreter",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "data", "value": "=[out:json][timeout:25];\n(\n  node[\"amenity\"=\"doctors\"](around:6000,{{ $json.lat || $json[0].lat }},{{ $json.lon || $json[0].lon }});\n  node[\"healthcare\"=\"doctor\"](around:6000,{{ $json.lat || $json[0].lat }},{{ $json.lon || $json[0].lon }});\n);\nout body 60;" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fd-overpass-003",
+      "name": "Overpass (Find Doctors)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const resp = $input.first().json;\nconst els = resp.elements || [];\nconst MAP = { general:\"General Practitioner\", dermatology:\"Dermatologist\", cardiology:\"Cardiologist\", paediatrics:\"Pediatrician\", gynaecology:\"Gynecologist\", orthopaedics:\"Orthopedist\", psychiatry:\"Psychiatrist\", ophthalmology:\"Ophthalmologist\", otolaryngology:\"ENT\" };\nreturn els.filter(e => e.tags && e.tags.name).map(e => {\n  const t = e.tags;\n  const s = (t[\"healthcare:speciality\"] || \"\").split(\";\")[0].trim().toLowerCase();\n  return { json: {\n    osm_id: \"osm-\" + e.id,\n    name: t.name,\n    specialty: MAP[s] || (s || \"General Practitioner\"),\n    languages: t[\"language\"] || \"\",\n    street: [t[\"addr:street\"], t[\"addr:housenumber\"]].filter(Boolean).join(\" \"),\n    postcode: t[\"addr:postcode\"] || \"\",\n    city: t[\"addr:city\"] || \"\",\n    lat: e.lat, lon: e.lon,\n    phone: t.phone || t[\"contact:phone\"] || \"\",\n    website: t.website || t[\"contact:website\"] || \"\",\n    source: \"OSM\"\n  } };\n});"
+      },
+      "id": "fd-code-004",
+      "name": "Normalize Doctors",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "fd-respond-005",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [880, 300]
+    }
+  ],
+  "connections": {
+    "Find Doctors Webhook": {
+      "main": [[{ "node": "Geocode (Nominatim)", "type": "main", "index": 0 }]]
+    },
+    "Geocode (Nominatim)": {
+      "main": [[{ "node": "Overpass (Find Doctors)", "type": "main", "index": 0 }]]
+    },
+    "Overpass (Find Doctors)": {
+      "main": [[{ "node": "Normalize Doctors", "type": "main", "index": 0 }]]
+    },
+    "Normalize Doctors": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {},
+  "pinData": {},
+  "active": false
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!--
+  ClearCare+  -  homepage.html  (guarded; bounces to index.html if not logged in)
+   - First-time user: "Complete your profile" form (insurance + postcode/city)
+   - Returning user: action buttons (Find a Doctor / Find a Specialist) + appointments sheet
+   - Avatar (top-right) opens the Patient Information sheet
+  Icons: Font Awesome (loaded via @import in style.css).
+  Styles: style.css   |   Logic: script.js
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ClearCare+ - Home</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="screen">
+  <div id="homepage">
+
+    <!-- Top bar -->
+    <div class="dash-top">
+      <div class="dash-brand">
+        <i class="fa-solid fa-heart-pulse"></i>
+        <span>ClearCare+</span>
+      </div>
+      <button class="avatar" id="d-initials" onclick="openProfile()">--</button>
+    </div>
+
+    <!-- Hero greeting (multilingual) -->
+    <div class="hero">
+      <p class="date" id="d-date"></p>
+      <h2 id="d-greeting"></h2>
+      <p class="sub" id="d-sub"></p>
+      <p class="quote" id="d-quote"></p>
+    </div>
+
+    <!-- ===== FIRST-TIME: complete patient profile ===== -->
+    <div id="profile-setup" class="panel hidden">
+      <h3 data-i18n="complete_profile">Complete your profile</h3>
+      <p class="desc" data-i18n="profile_desc">A few more details so we can match you to the right doctors and your insurance.</p>
+      <div class="field">
+        <label data-i18n="ins_type">Insurance type</label>
+        <select id="p-instype" onchange="onInsTypeChange()">
+          <option value="" data-i18n="sel_type">Select type</option>
+          <option value="Public" data-i18n="opt_public">Public (GKV)</option>
+          <option value="Private" data-i18n="opt_private">Private (PKV)</option>
+        </select>
+        <div class="field-err" id="err-p-instype"></div>
+      </div>
+      <div class="field">
+        <label data-i18n="ins_company">Insurance company</label>
+        <select id="p-inscompany" disabled>
+          <option value="" data-i18n="sel_insurer">Select your insurer</option>
+        </select>
+        <div class="field-err" id="err-p-inscompany"></div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label data-i18n="postcode">Postcode</label>
+          <input type="text" id="p-postcode" placeholder="e.g. 28195" inputmode="numeric" />
+          <div class="field-err" id="err-p-postcode"></div>
+        </div>
+        <div class="field">
+          <label data-i18n="city">City</label>
+          <input type="text" id="p-city" placeholder="e.g. Bremen" />
+          <div class="field-err" id="err-p-city"></div>
+        </div>
+      </div>
+      <div id="profile-err" class="banner err hidden"></div>
+      <button class="btn btn-primary" id="profile-save-btn" onclick="saveProfile()" data-i18n="save_continue">Save &amp; continue</button>
+    </div>
+
+    <!-- ===== RETURNING: actions ===== -->
+    <div id="returning" class="hidden">
+      <p class="sec-label" data-i18n="nav_actions">What would you like to do today?</p>
+      <div class="actions">
+        <button class="action" onclick="goFindGeneral()">
+          <div class="ic" style="background:#e6f2f5;color:#0a6b85"><i class="fa-solid fa-user-doctor"></i></div>
+          <div><div class="t" data-i18n="act_doctor_t">Find a Doctor</div><div class="s" data-i18n="act_doctor_s">Browse the doctor directory</div></div>
+          <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+        </button>
+        <button class="action" onclick="window.location.href='symptom.html'">
+          <div class="ic" style="background:#e6f8f7;color:#12a89d"><i class="fa-solid fa-user-doctor"></i></div>
+          <div><div class="t" data-i18n="act_symptom_t">Find a Specialist Doctor</div><div class="s" data-i18n="act_symptom_s">Answer a few questions to find the right specialist</div></div>
+          <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+        </button>
+        <button class="action" onclick="openAppointments()">
+          <div class="ic" style="background:#fdf2e8;color:#c87941"><i class="fa-solid fa-calendar-days"></i></div>
+          <div><div class="t" data-i18n="appt_title">Your appointments</div><div class="s" data-i18n="appt_sub">View and manage your bookings</div></div>
+          <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- ===== Patient Information bottom sheet (inside the phone frame) ===== -->
+<div id="profile-sheet" class="hidden">
+  <div class="sheet-backdrop" onclick="closeProfile()"></div>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="profile-card">
+      <div class="pa" id="sheet-initials">--</div>
+      <div style="min-width:0">
+        <div class="pn" id="sheet-name"></div>
+        <div class="pe" id="sheet-email"></div>
+      </div>
+      <button class="close" onclick="closeProfile()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <p class="sec-label" data-i18n="patient_info">Patient Information</p>
+    <div class="info-list">
+      <div class="info-row"><span class="k" data-i18n="full_name">Full name</span><span class="v" id="info-name"></span></div>
+      <div class="info-row"><span class="k" data-i18n="email_label">Email</span><span class="v" id="info-email"></span></div>
+      <div class="info-row"><span class="k" data-i18n="dob">Date of birth</span><span class="v" id="info-dob"></span></div>
+      <div class="info-row"><span class="k" data-i18n="pref_lang">Preferred language</span><span class="v" id="info-lang"></span></div>
+      <div class="info-row"><span class="k" data-i18n="ins_type">Insurance type</span><span class="v" id="info-instype"></span></div>
+      <div class="info-row"><span class="k" data-i18n="ins_company">Insurance company</span><span class="v" id="info-inscompany"></span></div>
+      <div class="info-row"><span class="k" data-i18n="postcode">Postcode</span><span class="v" id="info-postcode"></span></div>
+      <div class="info-row"><span class="k" data-i18n="city">City</span><span class="v" id="info-city"></span></div>
+    </div>
+
+    <button class="btn btn-outline" onclick="openEditProfile()" data-i18n="edit_profile" style="margin:4px 20px 8px;width:calc(100% - 40px);">Edit profile</button>
+
+    <!-- Edit form (hidden until "Edit profile" tapped) -->
+    <div id="edit-profile" class="panel hidden" style="margin:0 20px 12px;">
+      <div class="field">
+        <label data-i18n="ins_type">Insurance type</label>
+        <select id="e-instype" onchange="onEditInsTypeChange()">
+          <option value="" data-i18n="sel_type">Select type</option>
+          <option value="Public" data-i18n="opt_public">Public (GKV)</option>
+          <option value="Private" data-i18n="opt_private">Private (PKV)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-i18n="ins_company">Insurance company</label>
+        <select id="e-inscompany"><option value="" data-i18n="sel_insurer">Select your insurer</option></select>
+      </div>
+      <div class="row2">
+        <div class="field"><label data-i18n="postcode">Postcode</label><input type="text" id="e-postcode" inputmode="numeric" /></div>
+        <div class="field"><label data-i18n="city">City</label><input type="text" id="e-city" /></div>
+      </div>
+      <div class="field">
+        <label data-i18n="pref_lang">Preferred language</label>
+        <select id="e-language">
+          <option value="English">English</option>
+          <option value="Spanish">Español</option>
+          <option value="German">Deutsch</option>
+          <option value="Hindi">हिन्दी</option>
+          <option value="Turkish">Türkçe</option>
+          <option value="Arabic">العربية</option>
+        </select>
+      </div>
+      <div id="edit-err" class="banner err hidden"></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="saveProfileEdit()" data-i18n="save_changes">Save changes</button>
+        <button class="btn btn-outline" onclick="closeEditProfile()" data-i18n="cancel">Cancel</button>
+      </div>
+    </div>
+
+    <button class="signout" onclick="doLogout()">
+      <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="sign_out">Sign out</span>
+    </button>
+  </div>
+</div>
+
+<!-- ===== Appointments bottom sheet ===== -->
+<div id="appt-sheet" class="hidden">
+  <div class="sheet-backdrop" onclick="closeAppointments()"></div>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="profile-card">
+      <div class="pa"><i class="fa-solid fa-calendar-days"></i></div>
+      <div style="min-width:0">
+        <div class="pn" data-i18n="appt_title">Your appointments</div>
+        <div class="pe" data-i18n="appt_sub">View and manage your bookings</div>
+      </div>
+      <button class="close" onclick="closeAppointments()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="appt-list" class="sheet-list"></div>
+  </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>

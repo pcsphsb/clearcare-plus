@@ -1,0 +1,63 @@
+{
+  "name": "MediCare+ Translate Note (AI Agent)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "translate-note",
+        "responseMode": "responseNode",
+        "options": { "allowedOrigins": "*" }
+      },
+      "id": "tn-webhook-001",
+      "name": "Translate Note Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 300],
+      "webhookId": "tn-webhook-uuid-001"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.text }}",
+        "options": {
+          "systemMessage": "You are a medical translator. Translate the patient note into clear, simple, medically appropriate German. Preserve the meaning. Do not add any commentary, labels, or notes. Return ONLY the German translation."
+        }
+      },
+      "id": "tn-agent-002",
+      "name": "Translate Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "id": "tn-groq-003",
+      "name": "Groq Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [240, 480]
+    },
+    {
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {}
+      },
+      "id": "tn-respond-004",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [560, 300]
+    }
+  ],
+  "connections": {
+    "Translate Note Webhook": { "main": [[{ "node": "Translate Agent", "type": "main", "index": 0 }]] },
+    "Groq Chat Model": { "ai_languageModel": [[{ "node": "Translate Agent", "type": "ai_languageModel", "index": 0 }]] },
+    "Translate Agent": { "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]] }
+  },
+  "settings": {},
+  "pinData": {},
+  "active": false
+}
