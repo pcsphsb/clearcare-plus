@@ -1,14 +1,20 @@
-# ClearCare+ — n8n Workflow (Process Mirror)
+# ClearCare+ - n8n Workflow (Process Mirror)
 
 > **Purpose:** n8n mirrors the *back-end process* of ClearCare+. It does **not** own
-> login — Supabase Auth (in the app) does. n8n operates on the **data tables**
+> login - Supabase Auth (in the app) does. n8n operates on the **data tables**
 > (`profiles`, `consultations`) and the **AI triage**, exactly the parts the BPMN
 > automates. Two views of one process: the app = what the user sees; n8n = what the
 > system does automatically.
 
+> **Status note:** this is the original build reference. The live app now runs the
+> standalone path on Supabase Edge Functions, and the n8n path on cloud n8n
+> (`pcsphsb.app.n8n.cloud`), not the `localhost:5678` URLs shown in older examples
+> below. The Symptom Checker, doctor search, and booking are all built and live.
+> See the n8n Consolidation and Cleanup doc for the current consolidated workflow.
+
 ---
 
-## 0. Architecture Recap — Why n8n Can't Touch `auth.users`
+## 0. Architecture Recap - Why n8n Can't Touch `auth.users`
 
 | Door | What | Who uses it |
 |------|------|-------------|
@@ -16,11 +22,11 @@
 | **Database API** (PostgREST) | normal tables: `profiles`, `consultations`, future `doctors` | **n8n** |
 
 n8n's **Supabase node** uses the Database door only. So n8n mirrors the process by
-working on the tables — never on `auth.users`. (If you ever truly need n8n to create a
+working on the tables - never on `auth.users`. (If you ever truly need n8n to create a
 user, use an **HTTP Request** node against `/auth/v1/signup`, but you don't need that here.)
 
 **Key setup:** give n8n the **`service_role` (secret) key** in its Supabase credential
-(n8n only — never the browser). service_role bypasses RLS so the backend can read/write
+(n8n only - never the browser). service_role bypasses RLS so the backend can read/write
 freely.
 
 ---
@@ -29,13 +35,13 @@ freely.
 
 This single prompt tells n8n's AI builder to generate the **whole ClearCare+ process**
 (registration mirror + symptom triage + doctor matching + booking) with Supabase
-connections — not just the chatbot. After it builds, you set the credentials
+connections - not just the chatbot. After it builds, you set the credentials
 (Supabase = service_role key; AI = Groq) on the generated nodes.
 
 ```
 Build one n8n workflow called "ClearCare+ End-to-End Process" that mirrors a health-insurance doctor-booking process and connects to Supabase (Postgres). Create THREE flows in the same workflow:
 
-FLOW 1 — SYMPTOM TRIAGE + DOCTOR MATCHING (main flow):
+FLOW 1 - SYMPTOM TRIAGE + DOCTOR MATCHING (main flow):
 1. Webhook trigger, POST, path "symptom-check", set to respond via a "Respond to Webhook" node. It receives JSON: user_id, symptoms, language.
 2. Supabase node: GET a single row from table "profiles" where id equals the webhook's user_id (loads insurance_type, insurance_company, postcode, city, language).
 3. AI Agent node using a Groq chat model. System prompt: it recommends ONE type of doctor from the symptoms (navigation, NOT diagnosis), sets urgency to one of routine/soon/emergency, sets referral_required and needs_human_review booleans, and writes explanation_for_user in the patient's language. Output strict JSON only with keys: recommended_doctor_type, urgency, referral_required, needs_human_review, explanation_for_user. Attach a Structured Output Parser with those fields.
@@ -47,13 +53,13 @@ FLOW 1 — SYMPTOM TRIAGE + DOCTOR MATCHING (main flow):
 7. Set node: merge the AI recommendation and the matched doctors into one object.
 8. Respond to Webhook: return recommended_doctor_type, urgency, referral_required, explanation_for_user, and doctors (the matched list).
 
-FLOW 2 — REGISTRATION MIRROR:
+FLOW 2 - REGISTRATION MIRROR:
 1. Webhook trigger, POST, path "register-hook". Receives user_id, email, first_name, last_name, language.
 2. Supabase node: UPSERT a row in "profiles" (match on id) with those fields.
 3. Send Email node: a short welcome email to the user's email.
 4. Respond to Webhook: { "status": "ok" }.
 
-FLOW 3 — BOOKING:
+FLOW 3 - BOOKING:
 1. Webhook trigger, POST, path "book-appointment". Receives user_id, doctor_id (FK to
    doctors; null for OSM-fallback doctors), doctor_name, doctor_specialty,
    doctor_address, datetime (and note_original / note_de).
@@ -67,14 +73,14 @@ Use one Supabase credential (service_role key) for all Supabase nodes. If a tabl
 > **After it builds:** (1) set the **Supabase credential** (service_role key) on every
 > Supabase node; (2) set the **Groq credential** on the AI Agent; (3) paste the compact
 > triage system prompt (see Workflow B below) into the AI Agent; (4) create the missing
-> tables (`consultations`, `doctors`, `appointments`) — SQL for `consultations` is below.
+> tables (`consultations`, `doctors`, `appointments`) - SQL for `consultations` is below.
 >
 > n8n's AI builder may not wire every node perfectly. Use the node-by-node breakdowns
 > below (Workflows A & B) to fix anything it misses.
 
 ---
 
-## WORKFLOW A — Registration Process Mirror
+## WORKFLOW A - Registration Process Mirror
 
 Mirrors the BPMN: *Registration → Database → Confirmation*. The app already signs the
 user up; it then calls this webhook so n8n can run the downstream automation.
@@ -115,7 +121,7 @@ user up; it then calls this webhook so n8n can run the downstream automation.
                             [Respond: ok]
 ```
 
-### How the app calls it (add to script.js after a successful sign-up — optional)
+### How the app calls it (add to script.js after a successful sign-up - optional)
 
 ```js
 await fetch("http://localhost:5678/webhook/register-hook", {
@@ -128,16 +134,16 @@ await fetch("http://localhost:5678/webhook/register-hook", {
 ```
 
 > For a class demo you can also just trigger Workflow A with a **Manual Trigger** + pinned
-> sample data — you don't strictly need the app to call it. The point is to *show the process*.
+> sample data - you don't strictly need the app to call it. The point is to *show the process*.
 
 ---
 
-## WORKFLOW B — Symptom Checker AI (Next Sprint)
+## WORKFLOW B - Symptom Checker AI
 
 Mirrors: *Symptoms → AI recommends doctor type → store consultation → return result*.
 This is the brain of the app's "Symptom Checker" tab.
 
-### One-time DB setup — run in Supabase SQL Editor
+### One-time DB setup - run in Supabase SQL Editor
 
 ```sql
 create table if not exists public.consultations (
@@ -172,10 +178,10 @@ create policy "select own consultations" on public.consultations
 | 6b | (soon/routine) **Supabase** | *Insert* into `consultations` | Save the triage result |
 | 7 | **Respond to Webhook** | return the AI JSON to the app | App shows the recommendation |
 
-### AI Agent — System Message (paste into the AI Agent node)
+### AI Agent - System Message (paste into the AI Agent node)
 
 > ⚠️ n8n's prompt field has a **5,000-character limit**. The version below is
-> ~1,500 chars — well within budget — with the JSON format inlined so it works
+> ~1,500 chars - well within budget - with the JSON format inlined so it works
 > even WITHOUT the structured output parser.
 
 ```
@@ -270,7 +276,7 @@ Language: {{ $json.language }}
                                               [Respond to Webhook]
 ```
 
-### How the app's symptom.html will call it (next sprint)
+### How the app's symptom.html calls it
 
 ```js
 const res = await fetch("http://localhost:5678/webhook/symptom-check", {
@@ -290,9 +296,9 @@ this n8n webhook → AI → back to the screen.
 
 ## Build Order (Recommended)
 
-1. **Workflow B first** — it's the "wow" demo (symptoms → AI doctor type). You already
+1. **Workflow B first** - it's the "wow" demo (symptoms → AI doctor type). You already
    proved the AI Agent + Groq works; this just wraps it in a Webhook + Switch + Supabase.
-2. **Workflow A second** — quick to add; mirrors registration for completeness.
+2. **Workflow A second** - quick to add; mirrors registration for completeness.
 3. Then build **`symptom.html`** in the app and point the Symptom Checker button at it.
 
 ## Notes & Gotchas
@@ -302,7 +308,7 @@ this n8n webhook → AI → back to the screen.
   production URL.
 - **service_role key** goes in n8n's Supabase credential only (bypasses RLS for inserts).
 - **Browser → localhost n8n** works when both run on the same machine (your demo setup).
-- The app keeps doing the **real auth**; n8n mirrors the **process** — that's the
+- The app keeps doing the **real auth**; n8n mirrors the **process** - that's the
   deliberate front-end / orchestration split from the main project doc.
 
 ---

@@ -5,38 +5,38 @@
 
 ---
 
-## 1. The Problem — Bigger Than a Language Barrier
+## 1. The Problem - Bigger Than a Language Barrier
 
 When a non-German-speaking immigrant arrives in Germany and needs medical help, they face not one barrier but an entire chain of unfamiliar process steps:
 
-- **Insurance confusion:** Germany has two systems (statutory/GKV and private/PKV) with different rules, coverages, and doctor networks — explained entirely in German.
+- **Insurance confusion:** Germany has two systems (statutory/GKV and private/PKV) with different rules, coverages, and doctor networks - explained entirely in German.
 - **Referral dependency:** Most specialists require a GP referral (*Überweisung*) first. Immigrants who don't know this get turned away.
 - **Finding the right doctor:** Not all doctors accept all insurance types. Not all speak English. Availability varies by region and waitlist.
-- **The booking wall:** Even when a doctor is found, booking typically requires a phone call — in German — to a receptionist who may not speak English.
+- **The booking wall:** Even when a doctor is found, booking typically requires a phone call - in German - to a receptionist who may not speak English.
 - **No guidance on what happens next:** Post-appointment follow-up, prescriptions, and specialist referrals are equally opaque.
 
-**The result:** Immigrants delay seeking care, navigate incorrectly, or give up entirely. This is a process failure — not a personal one.
+**The result:** Immigrants delay seeking care, navigate incorrectly, or give up entirely. This is a process failure - not a personal one.
 
 ---
 
-## 2. The Benchmark — What TK Already Does (and Where It Stops)
+## 2. The Benchmark - What TK Already Does (and Where It Stops)
 
 **TK Insurance** (Techniker Krankenkasse) is the closest existing model. Its **TK-Doc app** offers:
 
 | TK Feature | What it does | Where it falls short |
 |------------|-------------|----------------------|
-| Symptom Checker | AI/chatbot triage | Isolated — does not connect to booking |
+| Symptom Checker | AI/chatbot triage | Isolated - does not connect to booking |
 | Doctor Locator | Filter by location, language, specialty | Manual search; user must interpret results |
 | Video Consultation | Click-through filter to select practitioner | Limited specialist range; German-first UX |
 | Appointment Booking | Handled by a human customer service agent via phone call | Slow, language-dependent, not scalable, not integrated |
 
-**The critical gap:** TK's services are separate modules, not a connected end-to-end process. The booking step still requires a human phone call — which is precisely where non-German speakers drop off.
+**The critical gap:** TK's services are separate modules, not a connected end-to-end process. The booking step still requires a human phone call - which is precisely where non-German speakers drop off.
 
 Our product eliminates that drop-off by making the entire journey a single, AI-driven, language-agnostic flow.
 
 ---
 
-## 3. The Solution — What We Are Building
+## 3. The Solution - What We Are Building
 
 An **AI-first health navigation SaaS** that takes an immigrant from *"I don't feel well"* to *"appointment confirmed"* in their own language, without a single phone call or manual search.
 
@@ -58,17 +58,17 @@ An **AI-first health navigation SaaS** that takes an immigrant from *"I don't fe
 
 ## 4. Core Value Proposition
 
-> **For newly arrived immigrants in Germany, ClearCare replaces the confusing, German-language process of finding and booking a doctor with a single, AI-guided, end-to-end experience in the user's own language — from symptom to confirmed appointment, without a single phone call.**
+> **For newly arrived immigrants in Germany, ClearCare replaces the confusing, German-language process of finding and booking a doctor with a single, AI-guided, end-to-end experience in the user's own language - from symptom to confirmed appointment, without a single phone call.**
 
 Three layers of value:
 
 - **Language:** The entire app experience, including doctor matching, is filtered by the user's language preference from the first screen.
-- **Process:** AI connects every step that TK leaves disconnected — triage feeds into matching, matching feeds into booking, booking feeds into follow-up.
-- **Understanding:** An AI policy explainer tells users in plain language what their insurance covers, what a referral is, and what to expect — eliminating the knowledge gap that causes delays.
+- **Process:** AI connects every step that TK leaves disconnected - triage feeds into matching, matching feeds into booking, booking feeds into follow-up.
+- **Understanding:** An AI policy explainer tells users in plain language what their insurance covers, what a referral is, and what to expect - eliminating the knowledge gap that causes delays.
 
 ---
 
-## 5. How We Deliver Value — AI at Every Step
+## 5. How We Deliver Value - AI at Every Step
 
 The following maps every process step to its AI responsibility:
 
@@ -79,7 +79,7 @@ The following maps every process step to its AI responsibility:
 | Symptom triage | Separate chatbot, no follow-through | AI triage engine assesses symptoms and recommends care level (GP, specialist, urgent care, or ER) |
 | Referral navigation | User is unaware of the system | AI explains whether a referral is needed and, if so, books the GP appointment first automatically |
 | Doctor matching | Manual filter search | AI matches based on: language, insurance acceptance, specialty, location, availability, and user ratings |
-| Appointment booking | Human phone call in German | AI automated booking via API integration with doctor scheduling systems — no phone call required |
+| Appointment booking | Human phone call in German | AI automated booking via API integration with doctor scheduling systems - no phone call required |
 | Confirmation & prep | None | AI sends appointment confirmation, location info, what to bring, and language tips |
 | Post-appointment | None | AI follow-up: prescription tracking, referral next steps, feedback collection |
 
@@ -95,54 +95,54 @@ TRIGGER → ONBOARDING → UNDERSTAND → TRIAGE → MATCH → BOOK → ATTEND �
 
 ### Stage-by-Stage Breakdown
 
-**Stage 1 — Trigger**
+**Stage 1 - Trigger**
 - User feels unwell or needs a check-up.
 - Opens ClearCare app.
 - *Emotional state: uncertain, possibly anxious, unfamiliar with the system.*
 
-**Stage 2 — Onboarding (AI-driven, one-time)**
+**Stage 2 - Onboarding (AI-driven, one-time)**
 - AI guides user through a conversational profile setup: language preference, insurance type (GKV/PKV), provider name, location, and basic medical history.
 - Profile is stored and drives all future recommendations automatically.
 - *Pain point eliminated: no confusing forms; no German required.*
 
-**Stage 3 — Insurance Understanding (AI policy explainer)**
+**Stage 3 - Insurance Understanding (AI policy explainer)**
 - AI surfaces a plain-language summary of what the user's insurance covers relevant to their current need.
 - Flags if a GP referral is required before seeing a specialist.
 - *Pain point eliminated: user no longer needs to read a German policy document.*
 
-**Stage 4 — Symptom Triage (AI triage engine)**
+**Stage 4 - Symptom Triage (AI triage engine)**
 - User describes symptoms in their own language via chat or voice.
 - AI recommends: GP visit / specialist / urgent care / emergency room.
 - If referral needed: AI queues a GP booking first before specialist search.
 - *Pain point eliminated: user is guided, not left to guess the correct care pathway.*
 
-**Stage 5 — Doctor Matching (AI recommendation engine)**
+**Stage 5 - Doctor Matching (AI recommendation engine)**
 - AI presents a shortlist of matched doctors: filtered by language, insurance acceptance, specialty, proximity, and availability.
 - Each result shows: languages spoken, earliest slot, distance, and user ratings.
 - User selects preferred doctor with one tap.
 - *Pain point eliminated: no manual search; no filtering in German.*
 
-**Stage 6 — Booking (AI automated)**
+**Stage 6 - Booking (AI automated)**
 - AI calls or API-connects to the doctor's scheduling system and books the selected slot.
 - User receives an in-app confirmation in their language.
 - No phone call. No German. No waiting.
 - *Pain point eliminated: the single biggest drop-off point in the current process is removed.*
 
-**Stage 7 — Appointment Preparation (AI notification)**
+**Stage 7 - Appointment Preparation (AI notification)**
 - 24 hours before: AI sends location, what documents to bring (insurance card, referral letter if applicable), and a brief note on what to expect at a German doctor's office.
 - *Pain point eliminated: first-time uncertainty at the clinic.*
 
-**Stage 8 — Post-Appointment Follow-Up (AI follow-up)**
+**Stage 8 - Post-Appointment Follow-Up (AI follow-up)**
 - AI prompts user to log prescription details for tracking.
 - If a specialist referral was issued, AI initiates the next booking flow automatically.
 - User can rate the experience; feedback is used to refine doctor matching.
-- *Pain point eliminated: the process doesn't end at the appointment — continuity of care is maintained.*
+- *Pain point eliminated: the process doesn't end at the appointment - continuity of care is maintained.*
 
 ---
 
 ## 7. Process Journey Map
 
-### 7.1 Core Process — The Primary Value-Creating Flow
+### 7.1 Core Process - The Primary Value-Creating Flow
 
 ```
 User Profile Setup → Triage → Doctor Match → Booking → Confirmation → Follow-Up
@@ -150,21 +150,21 @@ User Profile Setup → Triage → Doctor Match → Booking → Confirmation → 
 
 This is the end-to-end flow the user directly experiences. Every step is AI-executed. Human staff are only triggered as escalation exceptions (e.g., if AI cannot find an available match in the area).
 
-### 7.2 Management Process — Running the Business Behind the App
+### 7.2 Management Process - Running the Business Behind the App
 
 | Management Process | Description |
 |-------------------|-------------|
 | Doctor Network Management | Onboarding and vetting doctors/clinics to the platform; verifying language capabilities, insurance acceptance, and scheduling API availability. |
 | Quality & Compliance Monitoring | Ensuring GDPR compliance on health data; monitoring AI recommendation accuracy; auditing booking success rates. |
-| AI Model Governance | Regular review of triage accuracy, matching algorithm performance, and policy interpretation correctness — with human expert validation. |
+| AI Model Governance | Regular review of triage accuracy, matching algorithm performance, and policy interpretation correctness - with human expert validation. |
 | Partner Insurance Integration | Maintaining API connections with GKV and PKV providers to verify user coverage in real time. |
 | Performance Reporting | Dashboards tracking: bookings completed, drop-off points, average time from symptom to appointment, user satisfaction scores. |
 
-### 7.3 Support Process — What Enables the Core to Run
+### 7.3 Support Process - What Enables the Core to Run
 
 | Support Process | Description |
 |----------------|-------------|
-| Customer Support (human escalation) | Available for edge cases the AI cannot resolve — but routed through in-app chat first, not phone. |
+| Customer Support (human escalation) | Available for edge cases the AI cannot resolve - but routed through in-app chat first, not phone. |
 | Doctor Scheduling API Maintenance | Technical upkeep of integrations with clinic booking systems. |
 | Language Model Updates | Expanding language support and medical vocabulary accuracy in AI triage and matching. |
 | User Feedback Loop | Post-appointment ratings and complaints feed back into the matching and triage models. |
@@ -172,7 +172,7 @@ This is the end-to-end flow the user directly experiences. Every step is AI-exec
 
 ---
 
-## 8. BPMN 2.0 — AI Integration Points
+## 8. BPMN 2.0 - AI Integration Points
 
 The following maps which process elements in a standard BPMN flow are **AI-responsible** vs. **human-responsible**:
 
@@ -184,7 +184,7 @@ The following maps which process elements in a standard BPMN flow are **AI-respo
 | **Gateway (XOR)** | Referral required? | AI decision | Checks policy rules; routes to GP flow or direct specialist flow |
 | **Service Task** | Symptom triage (navigation, not diagnosis) | AI | NLP/ML engine classifies *which type of care*, not *what condition* |
 | **Gateway (XOR)** | Urgent care needed? | AI decision | Routes to emergency guidance or standard booking |
-| **Manual Task (safeguard)** | High-stakes routing review (e.g., ER vs. GP) | Human (in-the-loop) | GDPR Art. 22 safeguard — human confirms AI's high-risk routing before it takes effect |
+| **Manual Task (safeguard)** | High-stakes routing review (e.g., ER vs. GP) | Human (in-the-loop) | GDPR Art. 22 safeguard - human confirms AI's high-risk routing before it takes effect |
 | **Service Task** | Doctor matching | AI | Recommendation engine filters and ranks results |
 | **User Task** | Doctor selection | User | One-tap selection from AI shortlist |
 | **Service Task** | Appointment booking | AI | Automated API call or AI voice call to clinic |
@@ -193,16 +193,16 @@ The following maps which process elements in a standard BPMN flow are **AI-respo
 | **Intermediate Event** | Appointment day | System timer | Triggers reminder 24h before |
 | **Service Task** | Post-appointment follow-up | AI | Prompts prescription log, next referral, or feedback |
 | **End Event** | Care cycle complete | System | Profile updated; feedback stored |
-| **Exception Flow** | AI cannot resolve | Human agent | Escalation trigger — human reviews and intervenes |
+| **Exception Flow** | AI cannot resolve | Human agent | Escalation trigger - human reviews and intervenes |
 
 > **AI-responsible steps: 10 out of 15 process elements.**
-> Human intervention is reserved for escalation and one mandated high-risk safeguard — not the default path.
+> Human intervention is reserved for escalation and one mandated high-risk safeguard - not the default path.
 
 ---
 
 ## 9. Regulatory, Compliance & Governance
 
-An AI-first health platform operating in Germany sits at the intersection of two of the EU's strictest regimes: the **GDPR** (data protection) and the **EU AI Act** (AI risk regulation), with the **Medical Device Regulation (MDR)** lurking behind the triage feature. Treating compliance as a *designed process* — not an afterthought — is core to this project.
+An AI-first health platform operating in Germany sits at the intersection of two of the EU's strictest regimes: the **GDPR** (data protection) and the **EU AI Act** (AI risk regulation), with the **Medical Device Regulation (MDR)** lurking behind the triage feature. Treating compliance as a *designed process* - not an afterthought - is core to this project.
 
 ### 9.1 The Two Regimes at a Glance
 
@@ -214,22 +214,22 @@ An AI-first health platform operating in Germany sits at the intersection of two
 | **Symptom triage** | **EU AI Act (potentially high-risk) + MDR** | **High** | **Conformity assessment, human oversight** |
 | All health data handling | GDPR (Art. 9) + DPIA | High | Explicit consent, DPIA, data minimization |
 
-**Key insight:** The regulatory burden is *concentrated in one feature* — the triage engine. The core differentiator (matching + automated booking) is comparatively low-risk. This shapes the entire compliance strategy.
+**Key insight:** The regulatory burden is *concentrated in one feature* - the triage engine. The core differentiator (matching + automated booking) is comparatively low-risk. This shapes the entire compliance strategy.
 
 ### 9.2 GDPR Obligations
 
 - **Special category data (Art. 9):** Health data is prohibited to process by default. Our legal basis is **explicit, opt-in, informed consent**, captured separately from general terms.
 - **DPIA (mandatory):** Large-scale processing of special-category data triggers a required Data Protection Impact Assessment *before* launch. This is a hard gate, not optional documentation.
-- **Data minimization:** Each process step collects only the data it needs — directly tempering the AI-first instinct to gather everything.
+- **Data minimization:** Each process step collects only the data it needs - directly tempering the AI-first instinct to gather everything.
 - **Article 22 (automated decisions):** Users have the right not to be subject to solely automated decisions with significant effects. Low-stakes steps (booking) remain fully automated; high-stakes routing (e.g., ER vs. GP) now passes through the **human-in-the-loop safeguard** added to the BPMN above.
 
 ### 9.3 EU AI Act Obligations
 
 - **Triage = the high-risk question.** If the triage AI is deemed to make medical recommendations, it can be classified as a medical device under MDR, which pulls it into the AI Act's **high-risk tier** (conformity assessment, risk management system, technical documentation, logging, human oversight, registration).
-- **Our mitigation — "navigation, not diagnosis":** The triage engine recommends *which type of care to seek*, never *what condition the user has*. This positions it as an informational/navigational tool, aiming to stay clear of medical-device classification. This is a contested legal line, so it is paired with the human-in-the-loop safeguard rather than relied on alone.
+- **Our mitigation - "navigation, not diagnosis":** The triage engine recommends *which type of care to seek*, never *what condition the user has*. This positions it as an informational/navigational tool, aiming to stay clear of medical-device classification. This is a contested legal line, so it is paired with the human-in-the-loop safeguard rather than relied on alone.
 - **Transparency (limited-risk obligations):** Users are always told when they are interacting with AI, and AI-generated outputs are clearly labeled.
 
-### 9.4 Compliance by Design — A Named Management Process
+### 9.4 Compliance by Design - A Named Management Process
 
 Compliance is embedded as an ongoing **management process** (added to Section 7.2), not a one-time legal review:
 
@@ -243,13 +243,13 @@ Compliance is embedded as an ongoing **management process** (added to Section 7.
 
 ### 9.5 Strategic Takeaway
 
-The EU AI Act and GDPR are a **meaningful but navigable** obstacle. Crucially, they are *survivable without abandoning the AI-first model* — because only one feature carries the heavy burden, and it can be ring-fenced with a human safeguard and careful "navigation, not diagnosis" framing. For a process management perspective, regulation becomes a **set of designed process steps and governance roles**, which raises the maturity of the overall design rather than blocking it.
+The EU AI Act and GDPR are a **meaningful but navigable** obstacle. Crucially, they are *survivable without abandoning the AI-first model* - because only one feature carries the heavy burden, and it can be ring-fenced with a human safeguard and careful "navigation, not diagnosis" framing. For a process management perspective, regulation becomes a **set of designed process steps and governance roles**, which raises the maturity of the overall design rather than blocking it.
 
 ---
 
-## 10. Build Approach — Prototyping the Process in n8n
+## 10. Build Approach - Prototyping the Process in n8n
 
-**n8n** is a workflow automation platform that connects services together using visual "nodes" (triggers, logic, AI, API calls). It is an excellent fit for **building and demonstrating the orchestration layer** of this product — the engine that connects triage → matching → booking → follow-up — without writing a full application from scratch.
+**n8n** is a workflow automation platform that connects services together using visual "nodes" (triggers, logic, AI, API calls). It is an excellent fit for **building and demonstrating the orchestration layer** of this product - the engine that connects triage → matching → booking → follow-up - without writing a full application from scratch.
 
 ### 10.1 What n8n Is (and Isn't) Good For Here
 
@@ -323,8 +323,8 @@ Each BPMN step from Section 8 maps to a specific type of n8n node:
 
 ### 10.4 Why This Matters for the Project
 
-- **It makes the AI-first claim tangible.** Every AI Agent / LLM Chain node *is* an AI-responsible step from your BPMN — you can literally point at them.
-- **It shows the human-in-the-loop safeguard as a real node** (Send and Wait for Response), not just a policy promise — directly addressing the GDPR Art. 22 requirement.
+- **It makes the AI-first claim tangible.** Every AI Agent / LLM Chain node *is* an AI-responsible step from your BPMN - you can literally point at them.
+- **It shows the human-in-the-loop safeguard as a real node** (Send and Wait for Response), not just a policy promise - directly addressing the GDPR Art. 22 requirement.
 - **It mirrors your BPMN diagram**, so your process map and your build approach tell the same story.
 - **It's demo-able.** For a class, you could build a stripped-down version of even 3–4 nodes to show the concept working live.
 
@@ -337,7 +337,7 @@ Each BPMN step from Section 8 maps to a specific type of n8n node:
 | 3. Pilot | Connect a real front-end | n8n as backend via webhook; UI calls it |
 | 4. Scale | Migrate hot paths to custom code | Keep n8n for orchestration, harden the rest |
 
-### 10.6 Front-End vs. Back-End — Who Builds What
+### 10.6 Front-End vs. Back-End - Who Builds What
 
 This product is a **full-stack application**: a front-end the user touches, and a back-end that does the work. The two are built with different tools and connected by an API call.
 
@@ -360,7 +360,7 @@ This product is a **full-stack application**: a front-end the user touches, and 
                           ▼
 ┌─────────────────────────────────────────────────────────┐
 │                       BACK-END                           │
-│            (The process brain — user never sees)         │
+│            (The process brain - user never sees)         │
 │                                                          │
 │   n8n workflow → triage, AI matching, booking,           │
 │                  insurer API calls, human safeguard,     │
@@ -375,9 +375,9 @@ This product is a **full-stack application**: a front-end the user touches, and 
 
 | Layer | Tool | Responsibility |
 |-------|------|----------------|
-| **Front-End** | HTML / CSS / JavaScript | The user interface — screens, forms, displaying AI responses, sending requests |
+| **Front-End** | HTML / CSS / JavaScript | The user interface - screens, forms, displaying AI responses, sending requests |
 | **Connection** | HTTP request ↔ JSON response | The messenger that carries data between the two layers |
-| **Back-End** | n8n (+ database) | The business logic and automation — triage, matching, booking, follow-up |
+| **Back-End** | n8n (+ database) | The business logic and automation - triage, matching, booking, follow-up |
 
 > **The mental model:** HTML/CSS/JS is the *face*. n8n is the *engine*. An API call is the *messenger* between them. Together they form the full stack.
 
@@ -386,7 +386,7 @@ This product is a **full-stack application**: a front-end the user touches, and 
 This is the corrected flow based on the v1 BPMN draft. **Three fixes were applied:**
 1. The **"First Time?" gateway now gates the Survey** (profile setup is one-time), not the symptoms.
 2. **Symptoms + AI triage now run on every visit** (symptoms change each time), which is the logically correct path.
-3. **Availability is captured BEFORE the doctor list** (v3 fix), so the list is pre-filtered to doctors who can actually see the user in their preferred window — instead of letting the user pick a doctor and hit a dead end with no matching slots.
+3. **Availability is captured BEFORE the doctor list** (v3 fix), so the list is pre-filtered to doctors who can actually see the user in their preferred window - instead of letting the user pick a doctor and hit a dead end with no matching slots.
 
 ```
                           ┌─────────────────────────────┐
@@ -441,20 +441,22 @@ This is the corrected flow based on the v1 BPMN draft. **Three fixes were applie
 | First Time? gateway | ✅ **Prototype** | n8n IF node |
 | Survey (profile) | ✅ **Prototype** | n8n Form / AI Agent |
 | Ask for Symptoms | ✅ **Prototype** | n8n Chat / AI Agent |
-| **AI doctor-type recommendation** | ✅ **Prototype (core demo)** | n8n AI Agent (Claude) — *the "wow" moment* |
+| **AI doctor-type recommendation** | ✅ **Prototype (core demo)** | n8n AI Agent (Claude) - *the "wow" moment* |
 | Human-in-the-loop safeguard | ✅ **Prototype (optional)** | n8n Send and Wait node |
 | **Ask for availability** | ✅ **Prototype** | n8n Form (days + time-of-day preference) |
 | Retrieve possible doctors | ✅ **Prototype** | **Mock doctor list**, filtered by type + language + insurance + availability |
 | Select a Doctor | ✅ **Prototype** | n8n Form response (only doctors that fit the window are shown) |
-| Outlook calendar availability | 🔵 **Future Scope** | Real Outlook OAuth — *mocked as sample slots for demo* |
+| Outlook calendar availability | 🔵 **Future Scope** | Real Outlook OAuth - *mocked as sample slots for demo* |
 | Select Appointment Date | 🔵 **Future Scope** | Simplified pick from mock slots |
 | Send Confirmation | ✅ **Prototype** | n8n Send Email node |
 
 > **Prototype deliverable for this course:** a working n8n flow demonstrating **Symptoms → AI doctor-type recommendation → match against a mock doctor list → confirmation**. The Outlook/real-calendar booking integration is documented as **future production scope**, since live OAuth integration is out of reach for a 1-week build.
+>
+> **Update (as delivered):** the mock doctor list was replaced with real data. Doctor matching now queries an imported `doctors` table (primary) with a live OpenStreetMap fallback for areas outside the dataset. Booking, reschedule, and cancel are also built, and a booked appointment links back to its doctor row via a `doctor_id` foreign key. See the System Overview for the live data model.
 
 ### 10.9 Sample AI Triage Prompt (for the n8n AI Agent Node)
 
-This is the **system prompt** you would paste into the AI Agent node (using a model such as Anthropic's Claude). It turns a user's symptoms + profile into a structured doctor-type recommendation — framed as **navigation, not diagnosis** to stay clear of medical-device classification (see Section 9.3).
+This is the **system prompt** you would paste into the AI Agent node (using a model such as Anthropic's Claude). It turns a user's symptoms + profile into a structured doctor-type recommendation - framed as **navigation, not diagnosis** to stay clear of medical-device classification (see Section 9.3).
 
 **System Prompt:**
 
@@ -480,7 +482,7 @@ RULES:
 6. Respond in the user's preferred language: {{ $json.language }}.
 7. Be warm, clear, and brief. Avoid medical jargon.
 
-OUTPUT FORMAT — respond ONLY with valid JSON, no extra text:
+OUTPUT FORMAT - respond ONLY with valid JSON, no extra text:
 {
   "recommended_doctor_type": "string",
   "urgency": "routine | soon | emergency",
@@ -508,13 +510,13 @@ OUTPUT FORMAT — respond ONLY with valid JSON, no extra text:
   "urgency": "soon",
   "referral_required": true,
   "needs_human_review": false,
-  "explanation_for_user": "Based on what you described, a skin doctor (Dermatologist) is the right specialist. In Germany you'll likely need a referral from a GP first — I can help you book that.",
+  "explanation_for_user": "Based on what you described, a skin doctor (Dermatologist) is the right specialist. In Germany you'll likely need a referral from a GP first - I can help you book that.",
   "reasoning": "Persistent skin rash, non-urgent, dermatology is appropriate; specialist requires GP referral."
 }
 ```
 
 **How this connects to your n8n flow:**
-- The JSON output feeds directly into the next nodes — `urgency` drives the **Switch node** (emergency → 112 guidance; otherwise → booking).
+- The JSON output feeds directly into the next nodes - `urgency` drives the **Switch node** (emergency → 112 guidance; otherwise → booking).
 - `needs_human_review: true` triggers the **Send and Wait** human-in-the-loop node (your GDPR Art. 22 safeguard).
 - `recommended_doctor_type` becomes the filter for the **mock doctor list** lookup.
 - `explanation_for_user` is what the front-end displays to the user.
@@ -527,13 +529,13 @@ OUTPUT FORMAT — respond ONLY with valid JSON, no extra text:
 
 This section details *how the user interacts* with the system (the interface layer) and *how data flows* through it (inputs → storage → outputs). Every process step in Section 8 has a user-facing interface and an underlying data movement.
 
-### 11.1 Interface Layer — GUI and VUI
+### 11.1 Interface Layer - GUI and VUI
 
 The product offers **two interaction modes**, which matters because the core users are non-German speakers who may also have low digital literacy:
 
 | Mode | What it is | Why it matters here |
 |------|-----------|---------------------|
-| **GUI** (Graphical User Interface) | The visual app — screens, buttons, forms, lists | Standard, familiar, works for most users |
+| **GUI** (Graphical User Interface) | The visual app - screens, buttons, forms, lists | Standard, familiar, works for most users |
 | **VUI** (Voice User Interface) | Speak to the app; it speaks back | Accessibility for low-literacy users; natural for describing symptoms in one's own language; hands-free |
 
 **How the VUI works technically:**
@@ -542,7 +544,7 @@ User speaks (own language) → Speech-to-Text → AI Agent (triage)
                                                    │
 User hears response ◄── Text-to-Speech ◄── AI text output
 ```
-The voice layer is just an *input/output wrapper* around the same AI Agent — the process logic underneath is identical to the GUI path.
+The voice layer is just an *input/output wrapper* around the same AI Agent - the process logic underneath is identical to the GUI path.
 
 ### 11.2 GUI Screens & User Inputs
 
@@ -560,11 +562,11 @@ Each screen maps to a process step and defines exactly what the user inputs:
 | 8 | Appointment Slot | Pick exact date/time | Calendar picker | Spoken slot choice |
 | 9 | Confirmation | Acknowledge | Button | Spoken confirmation |
 
-### 11.3 Databases — What Gets Stored
+### 11.3 Databases - What Gets Stored
 
 The prototype uses a lightweight database (e.g., **Postgres / Supabase**, connected via n8n). Four core tables:
 
-**`users` — the profile (one-time, drives all recommendations)**
+**`users` - the profile (one-time, drives all recommendations)**
 | Field | Type | Example |
 |-------|------|---------|
 | user_id | ID | u_001 |
@@ -576,7 +578,7 @@ The prototype uses a lightweight database (e.g., **Postgres / Supabase**, connec
 | location | text | Bremen |
 | created_at | timestamp | 2026-06-17 |
 
-**`doctors` — the matchable list (MOCK data for the prototype)**
+**`doctors` - the matchable list (MOCK data for the prototype)**
 | Field | Type | Example |
 |-------|------|---------|
 | doctor_id | ID | d_014 |
@@ -588,7 +590,7 @@ The prototype uses a lightweight database (e.g., **Postgres / Supabase**, connec
 | available_slots | list | [2026-06-20 09:00, ...] |
 | rating | number | 4.7 |
 
-**`consultations` — each triage session (the AI's work)**
+**`consultations` - each triage session (the AI's work)**
 | Field | Type | Example |
 |-------|------|---------|
 | session_id | ID | s_330 |
@@ -602,7 +604,7 @@ The prototype uses a lightweight database (e.g., **Postgres / Supabase**, connec
 | preferred_time | text | "mornings" |
 | timestamp | timestamp | 2026-06-17 14:22 |
 
-**`appointments` — confirmed bookings**
+**`appointments` - confirmed bookings**
 | Field | Type | Example |
 |-------|------|---------|
 | appointment_id | ID | a_205 |
@@ -612,7 +614,7 @@ The prototype uses a lightweight database (e.g., **Postgres / Supabase**, connec
 | status | text | confirmed |
 | confirmation_sent | boolean | true |
 
-> **Compliance link (Section 9):** the `consultations` table doubles as the **AI Act audit log** — every AI decision and its `needs_human_review` flag is traceable. Health data here is special-category (GDPR Art. 9) and requires explicit consent + encryption.
+> **Compliance link (Section 9):** the `consultations` table doubles as the **AI Act audit log** - every AI decision and its `needs_human_review` flag is traceable. Health data here is special-category (GDPR Art. 9) and requires explicit consent + encryption.
 
 ### 11.4 Inputs → Process → Outputs (I/O Map)
 
@@ -650,7 +652,7 @@ What the system *produces* (the deliverable outputs):
 | **Primary Problem Solved** | End-to-end process failure: from insurance confusion to the phone-call booking wall |
 | **Key Differentiator** | Single connected flow vs. TK's separate modules; fully automated booking vs. human phone call |
 | **AI Coverage** | 10 of 15 BPMN process steps are AI-responsible |
-| **Business Model** | B2B2C — white-labeled to insurance providers, or direct D2C subscription |
+| **Business Model** | B2B2C - white-labeled to insurance providers, or direct D2C subscription |
 | **Competitive Benchmark** | TK-Doc (gap: fragmented services, German-first UX, manual booking) |
 | **Regulatory Exposure** | GDPR (Art. 9 + Art. 22) and EU AI Act; burden concentrated in the triage feature |
 | **Compliance Strategy** | "Navigation, not diagnosis" framing + human-in-the-loop safeguard + Compliance-by-Design governance |
@@ -658,4 +660,4 @@ What the system *produces* (the deliverable outputs):
 ---
 
 *MDT 25–27 | Change and Process Management Project*
-*Draft v2 — Redrafted for process clarity and AI-first alignment*
+*Draft v2 - Redrafted for process clarity and AI-first alignment*

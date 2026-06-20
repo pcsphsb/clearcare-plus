@@ -10,13 +10,13 @@ instead (for the live workflow demo).
 | `symptom-check` | `supabase/functions/symptom-check/index.ts` | AI symptom triage via Groq (key server-side) | `GROQ_API_KEY` |
 | `find-doctors` | `supabase/functions/find-doctors/index.ts` | OSM fallback (Nominatim + Overpass) for cities not in the imported DB | none |
 
-Deploy **both** the same way (below). `find-doctors` needs no secret — it only
+Deploy **both** the same way (below). `find-doctors` needs no secret - it only
 calls free public OSM APIs, but it must live server-side because Nominatim requires
 a `User-Agent` (which browsers can't set) and to avoid CORS.
 
 ---
 
-## Option A — Supabase Dashboard (no CLI)
+## Option A - Supabase Dashboard (no CLI)
 
 For **each** function (`symptom-check`, then `find-doctors`):
 1. Supabase → **Edge Functions** → **Create a function** → name it exactly (`symptom-check` / `find-doctors`).
@@ -29,7 +29,7 @@ Then add the Groq secret (only `symptom-check` needs it):
 With `USE_N8N = false` in `script.js`, the Symptom Checker and the doctor OSM
 fallback now work on their own.
 
-## Option B — Supabase CLI
+## Option B - Supabase CLI
 
 ```bash
 # one-time
@@ -37,7 +37,7 @@ npm i -g supabase
 supabase login
 supabase link --project-ref ossxctklhsoiiigixuvt   # your project ref (from SUPABASE_URL)
 
-# set the Groq key as a secret (never in the client) — only needed by symptom-check
+# set the Groq key as a secret (never in the client) - only needed by symptom-check
 supabase secrets set GROQ_API_KEY=gsk_xxxxxxxx
 
 # deploy both as public functions (the browser calls them, so skip JWT verification)
@@ -89,7 +89,7 @@ Two flags at the top of `script.js`:
 
 `USE_N8N` switches **booking** (direct Supabase vs n8n), the **Symptom Checker**
 (Edge Function vs n8n) and the **doctor OSM fallback** (Edge Function vs n8n)
-together — one flag flips the whole app between "own ecosystem" and "show the n8n
+together - one flag flips the whole app between "own ecosystem" and "show the n8n
 mapping."
 
 ---
@@ -97,9 +97,9 @@ mapping."
 ## Notes
 - **`find-doctors` resilience:** tries several Overpass mirrors with per-request
   timeouts; if every upstream fails it returns `200` with `[]` (UI shows "no
-  doctors found") and logs the reason — check **Edge Functions → find-doctors → Logs**.
+  doctors found") and logs the reason - check **Edge Functions → find-doctors → Logs**.
 - **Model:** `symptom-check` uses `llama-3.3-70b-versatile`. If Groq deprecates it,
   change `MODEL` in its `index.ts`.
-- **Key safety:** the Groq key lives only in the Supabase secret — never shipped to
+- **Key safety:** the Groq key lives only in the Supabase secret - never shipped to
   the browser, never in `script.js`.
 - **CORS:** handled inside both functions (`Access-Control-Allow-Origin: *`).

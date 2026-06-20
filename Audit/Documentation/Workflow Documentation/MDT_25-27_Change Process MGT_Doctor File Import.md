@@ -1,9 +1,9 @@
-# Doctors Database — Import Guide
+# Doctors Database - Import Guide
 
 How to load the doctor directory into Supabase and how the app uses it.
 
-- **Source:** `doctors_raw.xlsx` (1,174 rows, original — left untouched).
-- **Import file:** `doctors.csv` — same data with clean, lowercase, snake_case headers, ready for Supabase. Regenerate it from the xlsx any time if the source changes.
+- **Source:** `doctors_raw.xlsx` (1,174 rows, original - left untouched).
+- **Import file:** `doctors.csv` - same data with clean, lowercase, snake_case headers, ready for Supabase. Regenerate it from the xlsx any time if the source changes.
 - **App side:** `findDoctorsFromDB()` in `script.js` queries the `doctors` table (primary), with OSM as fallback. See `ARZTAPI_SCAFFOLDING.md` for the booking pathways.
 
 ---
@@ -14,18 +14,18 @@ How to load the doctor directory into Supabase and how the app uses it.
 |---|---|---|
 | `name` | Doctor / practice name | reliable |
 | `specialty` | e.g. "General Practitioner / Family Medicine", "Gynaecology" | reliable; **British spelling** |
-| `address` | Street address | ⚠️ messy (≈47% are scrape dates) — not used for matching |
-| `postcode` | 5-digit postal code | ✅ 100% clean — **primary location filter** |
-| `city` | City | ⚠️ has typos ("Sttutgart", "Stutgart") — used only as a fallback |
-| `languages` | Comma list, e.g. "German, Arabic, English" | reliable — language filter |
-| `email` | Contact email | ~56% present — used for the email-request booking |
-| `phone` | Phone | ❌ ~73% junk ("00 - 15") — Call button hidden unless ≥6 digits |
+| `address` | Street address | ⚠️ messy (≈47% are scrape dates) - not used for matching |
+| `postcode` | 5-digit postal code | ✅ 100% clean - **primary location filter** |
+| `city` | City | ⚠️ has typos ("Sttutgart", "Stutgart") - used only as a fallback |
+| `languages` | Comma list, e.g. "German, Arabic, English" | reliable - language filter |
+| `email` | Contact email | ~56% present - used for the email-request booking |
+| `phone` | Phone | ❌ ~73% junk ("00 - 15") - Call button hidden unless ≥6 digits |
 | `website` | URL | ~55% present |
 | `hours_mon` … `hours_sun` | Opening hours per weekday, e.g. "08:00-16:00", "08:00-12:00, 14:00-18:00", or "No info available" | 731/1174 doctors have usable hours |
 
 ---
 
-## 2. Import — pick ONE path
+## 2. Import - pick ONE path
 
 **Path A (easiest): let the importer create the table.**
 Table Editor → **New table** → in the dialog click **"Import data from CSV"** → upload `doctors.csv`.
@@ -92,7 +92,7 @@ create policy "Public can read doctors"
 -- Manage the data via the Supabase dashboard or the service role.
 ```
 
-If a search returns nothing even though rows exist, RLS is almost always the cause — confirm the SELECT policy above is present.
+If a search returns nothing even though rows exist, RLS is almost always the cause - confirm the SELECT policy above is present.
 
 ---
 
@@ -108,15 +108,15 @@ If a search returns nothing even though rows exist, RLS is almost always the cau
 
 ## 6. Future columns (scaffolding already in code)
 
-- **Insurance filter** — add a column and flip `INSURANCE_FILTER_ENABLED = true` in `script.js`:
+- **Insurance filter** - add a column and flip `INSURANCE_FILTER_ENABLED = true` in `script.js`:
   ```sql
   alter table public.doctors add column accepts_insurance text;  -- e.g. 'Public', 'Private', 'Public,Private'
   ```
   The app will then silently keep only doctors that accept the patient's insurance type.
-- **Doctor calendar sync** — `DOCTOR_CALENDAR_ENABLED` in `script.js` (currently a stub). When a real free/busy source exists, it overrides the opening-hours slots so bookings reflect on both sides.
+- **Doctor calendar sync** - `DOCTOR_CALENDAR_ENABLED` in `script.js` (currently a stub). When a real free/busy source exists, it overrides the opening-hours slots so bookings reflect on both sides.
 
 ---
 
 ## 7. Regenerating `doctors.csv` from the xlsx
 
-If `doctors_raw.xlsx` is updated, re-run the converter (Node, no dependencies) — it only renames headers; row data is copied verbatim. Ask Claude to regenerate, or adapt the script used originally (unzips the xlsx, reads `sharedStrings.xml` + `sheet1.xml`, writes the CSV with the snake_case headers).
+If `doctors_raw.xlsx` is updated, re-run the converter (Node, no dependencies) - it only renames headers; row data is copied verbatim. Ask Claude to regenerate, or adapt the script used originally (unzips the xlsx, reads `sharedStrings.xml` + `sheet1.xml`, writes the CSV with the snake_case headers).

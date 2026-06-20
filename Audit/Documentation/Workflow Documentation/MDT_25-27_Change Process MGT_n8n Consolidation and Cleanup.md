@@ -63,14 +63,14 @@ pointed at the wrong place:
    webhook body; `language` from the loaded profile.
 2. **Create Appointment** originally mapped only `doctor_id` and broke when it was a
    non-existent value. The app sends `doctor_name`, `doctor_specialty`,
-   `doctor_address`, `datetime` (and `user_id`), so the node maps those — matching
+   `doctor_address`, `datetime` (and `user_id`), so the node maps those - matching
    both the app payload and the live `appointments` table.
 
 > Schema note: the live `appointments` table stores the `doctor_name` /
 > `doctor_specialty` / `doctor_address` **text snapshot** AND a `doctor_id` foreign
 > key to `doctors(id)`. As of the doctors_dummy retirement, `doctor_id` is a real FK
 > again (it previously pointed at the prototype `doctors_dummy`). The app now sends
-> `doctor_id` too — populated for doctors that come from the `doctors` table, null for
+> `doctor_id` too - populated for doctors that come from the `doctors` table, null for
 > OSM-fallback doctors (which have no `doctors.id`). The `book-appointment` workflow
 > maps `doctor_id` as well, so the n8n booking path also writes the relationship.
 

@@ -1,4 +1,4 @@
-# ClearCare+ — Doctor Data Architecture (free, ArztAPI-pluggable)
+# ClearCare+ - Doctor Data Architecture (free, ArztAPI-pluggable)
 
 > **Problem:** There is no open German doctor database (GDPR). The real product,
 > **ArztAPI**, costs ~€799/month. **Goal:** build a *pluggable* architecture that runs
@@ -7,16 +7,16 @@
 
 ---
 
-## 1. The Big Idea — Provider Adapter Pattern
+## 1. The Big Idea - Provider Adapter Pattern
 
 Define ONE normalized "doctor" shape (the **contract**). Every data source is an
 **adapter** that returns data in that shape. The app/n8n only ever talks to the
 normalized shape, so providers are interchangeable.
 
 ```
-                          ┌─ OSM Overpass adapter   (FREE — build now)
+                          ┌─ OSM Overpass adapter   (FREE - build now)
  app/n8n  ──> Normalizer ─┼─ Mock/seed adapter      (already have)
- (postcode, specialty)    └─ ArztAPI adapter        (PAID — future drop-in)
+ (postcode, specialty)    └─ ArztAPI adapter        (PAID - future drop-in)
                                │
                                ▼  upsert
                         Supabase `doctors` (cache)
@@ -47,13 +47,13 @@ This mirrors the kind of fields ArztAPI returns, so a future swap is 1:1.
 | source | text | `"OSM"` | `"ArztAPI"` |
 | osm_id | text | node id (for dedup) | n/a |
 
-> **Note — normalized contract vs. the live `doctors` table.** The table above is the
+> **Note - normalized contract vs. the live `doctors` table.** The table above is the
 > *target/aspirational* contract (what the OSM normalizer and a future ArztAPI emit), so a
 > provider swap stays 1:1. The **live** `doctors` table as currently deployed differs in a
 > few column names/shapes and is the source of truth for the running app:
-> - `address` (single text column) instead of `street` + `lat`/`lon` — and the app
+> - `address` (single text column) instead of `street` + `lat`/`lon` - and the app
 >   deliberately shows only postcode + city for DB doctors because the scraped `address`
->   is unreliable (see System Overview §5, "Known intentional behavior — doctor address").
+>   is unreliable (see System Overview §5, "Known intentional behavior - doctor address").
 > - `accepts_insurance` instead of `insurance_accepted`.
 > - Opening hours as seven columns `hours_mon … hours_sun` (read by `openingHoursFromRow()`),
 >   not a single free-text field.
@@ -76,7 +76,7 @@ alter table public.doctors add column if not exists osm_id   text unique;   -- d
 
 ---
 
-## 3. START HERE TODAY — see real data in 2 minutes
+## 3. START HERE TODAY - see real data in 2 minutes
 
 Before any n8n, prove the data exists. Go to **https://overpass-turbo.eu**, paste this,
 click **Run**:
@@ -91,7 +91,7 @@ click **Run**:
 out body 60;
 ```
 
-> ⚠️ Don't use `area["name"="Bremen"]["admin_level"="4"]` — Bremen's level-4 area is
+> ⚠️ Don't use `area["name"="Bremen"]["admin_level"="4"]` - Bremen's level-4 area is
 > named "Freie Hansestadt Bremen", so that returns nothing and overpass-turbo just
 > shows its default map (near Rome). The `{{geocodeArea:...}}` shortcut avoids this.
 
@@ -108,7 +108,7 @@ You'll see real names, addresses, and some specialties. That's your free dataset
 out body 60;
 ```
 `6000` = metres radius; `53.0793,8.8017` = Bremen centre. This is the approach to use
-in n8n (the `{{geocodeArea}}` macro is overpass-turbo ONLY — it won't work in the raw
+in n8n (the `{{geocodeArea}}` macro is overpass-turbo ONLY - it won't work in the raw
 Overpass API).
 
 ---
@@ -122,10 +122,10 @@ Reuse the same pattern as your symptom flow: Webhook → HTTP → normalize → 
 | 1 | **Webhook** | POST `find-doctors`, responseNode, CORS `*`. Body: `{ postcode, city, specialty }` |
 | 2 | **HTTP Request** | POST `https://overpass-api.de/api/interpreter`, body field `data` = the Overpass query (below) |
 | 3 | **Code** | normalize OSM elements → the schema (code below) |
-| 4 | **Supabase** | Upsert into `doctors` (match on `osm_id`) — caches results |
+| 4 | **Supabase** | Upsert into `doctors` (match on `osm_id`) - caches results |
 | 5 | **Respond to Webhook** | return the normalized list |
 
-### Overpass query for n8n (coordinate/`around` — reliable)
+### Overpass query for n8n (coordinate/`around` - reliable)
 In n8n you must geocode first (the `{{geocodeArea}}` macro is overpass-turbo only).
 So: **Nominatim** turns postcode → lat/lon, then this Overpass query (sent as the
 `data` parameter) finds doctors within a radius:
@@ -177,14 +177,14 @@ return out;
 
 ### Optional: precise radius search (add geocoding)
 If you want "within 5 km of the user's postcode" instead of whole-city:
-1. **HTTP Request → Nominatim:** `GET https://nominatim.openstreetmap.org/search?postalcode={{postcode}}&country=Germany&format=json` (set a `User-Agent` header — required). Take `[0].lat`, `[0].lon`.
+1. **HTTP Request → Nominatim:** `GET https://nominatim.openstreetmap.org/search?postalcode={{postcode}}&country=Germany&format=json` (set a `User-Agent` header - required). Take `[0].lat`, `[0].lon`.
 2. Use a radius Overpass query: `node["amenity"="doctors"](around:5000,LAT,LON);`
 
 ---
 
 ## 5. The Adapter Switch (how you make it pluggable)
 
-Put a single variable at the top of the flow — a **Set** node: `provider = "OSM"`.
+Put a single variable at the top of the flow - a **Set** node: `provider = "OSM"`.
 Then a **Switch** node routes to the matching adapter branch; all branches feed the
 **same normalizer output shape**:
 
@@ -201,7 +201,7 @@ That is the whole value of the architecture.
 
 ---
 
-## 6. Honest Limitations (state these in your write-up — they're a strength, not a weakness)
+## 6. Honest Limitations (state these in your write-up - they're a strength, not a weakness)
 
 | Gap in the free (OSM) version | How ArztAPI fills it |
 |-------------------------------|----------------------|
@@ -210,7 +210,7 @@ That is the whole value of the architecture.
 | **No insurance (GKV/PKV) data** | Insurance acceptance per doctor |
 | No availability / bookable slots | Real-time availability |
 
-So the free build is a **best-effort directory** — perfect to prove the architecture
+So the free build is a **best-effort directory** - perfect to prove the architecture
 and run a demo. The paid layer is *data completeness*, and your design swaps it in
 cleanly. That's exactly the "real, adaptable architecture" you wanted.
 
@@ -222,7 +222,7 @@ cleanly. That's exactly the "real, adaptable architecture" you wanted.
 ---
 
 ## 7. Build Order
-1. Run the overpass-turbo query (Section 3) — confirm data for your city. ✅ today
+1. Run the overpass-turbo query (Section 3) - confirm data for your city. ✅ today
 2. Extend the `doctors` table (Section 2 SQL).
 3. Build the OSM n8n flow (Section 4): Webhook → Overpass → normalize → upsert → respond.
 4. Re-enable the **doctor-matching** step in your symptom workflow, querying the cached
