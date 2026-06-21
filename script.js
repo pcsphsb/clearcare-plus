@@ -668,9 +668,14 @@ async function handleRegister(e){
 
   document.getElementById("register-form").reset();
   document.getElementById("rules").classList.add("hidden");
+  // Real signup just fired, so a green success is accurate here. Reset the shared
+  // banner back to the "ok" state in case a prior Resend left it as neutral info.
+  const lmsg = document.getElementById("login-msg");
+  lmsg.className = "banner ok";
+  lmsg.querySelector("i").className = "fa-solid fa-circle-check";
   document.getElementById("login-msg-text").textContent =
     "Almost there! Check your email and click the confirmation link, then log in.";
-  document.getElementById("login-msg").classList.remove("hidden");
+  lmsg.classList.remove("hidden");
   showView("login");
 }
 
@@ -717,9 +722,16 @@ async function resendConfirmation(){
   if (error){ banner("login-err", error.message); console.error(error); return; }
 
   banner("login-err", "");
+  // Supabase deliberately returns no error here even if the email is unregistered,
+  // already confirmed, or later blocked by the mail provider (anti-enumeration: the
+  // client never learns the delivery outcome). So this can't be a "success" — it is
+  // shown as neutral info, and worded to be true whether or not an email goes out.
+  const box = document.getElementById("login-msg");
+  box.className = "banner info";
+  box.querySelector("i").className = "fa-solid fa-circle-info";
   document.getElementById("login-msg-text").textContent =
-    "Confirmation email sent again. Please check your inbox.";
-  document.getElementById("login-msg").classList.remove("hidden");
+    "If an account exists for that email and still needs confirming, we've sent a new link. Please check your inbox and spam folder.";
+  box.classList.remove("hidden");
   console.log("📧 [Supabase] Confirmation resent ->", email);
 }
 
