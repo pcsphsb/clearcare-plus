@@ -9,32 +9,13 @@
           "systemMessage": "You are the triage assistant for ClearCare+, a health-insurance navigation app for immigrants in Germany. You help users reach the RIGHT TYPE of doctor. You are a navigator, NOT a diagnostician.\n\nRULES:\n1. Recommend ONE doctor type only (e.g. General Practitioner, Dermatologist, Cardiologist, ENT, Orthopedist, Gynecologist, Pediatrician, Psychiatrist, Ophthalmologist, Dentist, Urologist, Gastroenterologist).\n2. NEVER name a disease, diagnosis, or treatment. If asked what is wrong, say you only help find the right doctor.\n3. \"urgency\" is EXACTLY one of: routine, soon, emergency.\n4. EMERGENCY OVERRIDE: if symptoms include red flags (chest pain, difficulty breathing, stroke signs, severe bleeding, fainting, suicidal thoughts, severe allergic reaction) set urgency=emergency, needs_human_review=true, recommended_doctor_type=\"Emergency (call 112)\", and tell the user to call 112 now.\n5. GERMAN REFERRAL RULE: specialists need a GP referral first. Set referral_required=true for a specialist; false for General Practitioner or Emergency.\n6. Write \"explanation_for_user\" in the user's language. Warm, simple, 1-2 sentences, no jargon.\n7. If symptoms are vague, default to General Practitioner. Prefer \"soon\" over \"routine\" if symptoms are painful, worsening, or persistent."
         }
       },
-      "id": "8e14eab8-7155-44f4-9030-35976f3bd05a",
+      "id": "1fde92dc-a9f1-42a8-a11b-ee26745f259f",
       "name": "Medical Triage Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        528,
-        176
-      ]
-    },
-    {
-      "parameters": {
-        "jsonSchemaExample": {
-          "recommended_doctor_type": "General Practitioner",
-          "urgency": "routine",
-          "referral_required": false,
-          "needs_human_review": false,
-          "explanation_for_user": "Based on your symptoms, I recommend seeing a General Practitioner."
-        }
-      },
-      "id": "0c7d388a-5aa0-4bdf-ab6c-08ad92637dae",
-      "name": "Structured Output Parser",
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-      "typeVersion": 1.3,
-      "position": [
-        672,
-        368
+        3200,
+        1600
       ]
     },
     {
@@ -48,10 +29,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        528,
-        368
+        3200,
+        1792
       ],
-      "id": "702391ba-e00d-4428-acf8-c555a897b7eb",
+      "id": "b2faedb7-318b-4360-bfed-8747985f8092",
       "name": "Groq Chat Model",
       "credentials": {
         "groqApi": {
@@ -69,13 +50,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "a3f23c6f-8385-48ac-88e7-5a329440930a",
+      "id": "204af312-7b9e-4554-8486-76125eda74fc",
       "name": "Symptom Check Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        96,
-        256
+        2752,
+        1600
       ],
       "webhookId": "cdd4927b-d331-4bb5-b1bd-0e809527ebd6"
     },
@@ -92,13 +73,13 @@
           ]
         }
       },
-      "id": "c068a69b-5182-4434-8a6b-17de76a1503e",
+      "id": "01647755-cf9b-4ef6-991e-709b9d08dad6",
       "name": "Load User Profile",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        320,
-        256
+        2976,
+        1600
       ],
       "credentials": {
         "supabaseApi": {
@@ -121,7 +102,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.output.urgency }}",
+                    "leftValue": "={{ $json.urgency }}",
                     "operator": {
                       "type": "string",
                       "operation": "equals"
@@ -139,13 +120,13 @@
           "renameFallbackOutput": "Continue"
         }
       },
-      "id": "c8a1d0eb-0b11-49af-88b1-29072effcab3",
+      "id": "2d10c614-2063-4d10-85de-89fcf429de74",
       "name": "Route by Urgency",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        1264,
-        256
+        4000,
+        1600
       ]
     },
     {
@@ -155,25 +136,25 @@
             {
               "id": "1",
               "name": "recommended_doctor_type",
-              "value": "={{ $json.output.recommended_doctor_type }}",
+              "value": "={{ $json.recommended_doctor_type }}",
               "type": "string"
             },
             {
               "id": "2",
               "name": "urgency",
-              "value": "={{ $json.output.urgency }}",
+              "value": "={{ $json.urgency }}",
               "type": "string"
             },
             {
               "id": "3",
               "name": "referral_required",
-              "value": "={{ $json.output.referral_required }}",
+              "value": "={{ $json.referral_required }}",
               "type": "boolean"
             },
             {
               "id": "4",
               "name": "explanation_for_user",
-              "value": "={{ $json.output.explanation_for_user }}",
+              "value": "={{ $json.explanation_for_user }}",
               "type": "string"
             },
             {
@@ -186,26 +167,26 @@
         },
         "options": {}
       },
-      "id": "a79f307a-e0a6-400b-8a73-c0ccb86af642",
+      "id": "16cdd3f2-9ea9-4edc-a370-9703726e23a9",
       "name": "Emergency Message",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1504,
-        144
+        4224,
+        1504
       ]
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "afd407d1-dffe-4926-8569-d5f53d5d9991",
+      "id": "fd9257da-391a-4f77-9a15-e2111f397344",
       "name": "Respond Emergency",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1728,
-        144
+        4448,
+        1504
       ]
     },
     {
@@ -244,13 +225,13 @@
           ]
         }
       },
-      "id": "d2ad5568-109a-47e7-867f-f96673a0466b",
+      "id": "3dc85957-3735-43f3-8aa8-765aec3f4553",
       "name": "Save Consultation",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1504,
-        336
+        4224,
+        1696
       ],
       "credentials": {
         "supabaseApi": {
@@ -270,12 +251,7 @@
             {
               "keyName": "specialty",
               "condition": "eq",
-              "keyValue": "={{ $(\"Medical Triage Agent\").item.json.output.recommended_doctor_type }}"
-            },
-            {
-              "keyName": "insurance_company",
-              "condition": "eq",
-              "keyValue": "={{ $(\"Load User Profile\").item.json.insurance_company }}"
+              "keyValue": "={{ $(\"Code in JavaScript\").item.json.recommended_doctor_type }}"
             },
             {
               "keyName": "city",
@@ -285,21 +261,22 @@
           ]
         }
       },
-      "id": "0be49d1a-a81c-428e-9dbf-d9fbfb6444b0",
+      "id": "d7df825f-323e-4db5-b977-d537e9488747",
       "name": "Find Matching Doctors",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1728,
-        336
+        4448,
+        1696
       ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
       "credentials": {
         "supabaseApi": {
           "id": "y04Dro1zdqBdHu2V",
           "name": "Supabase account"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -308,25 +285,25 @@
             {
               "id": "1",
               "name": "recommended_doctor_type",
-              "value": "={{ $(\"Medical Triage Agent\").item.json.output.recommended_doctor_type }}",
+              "value": "={{ $(\"Code in JavaScript\").item.json.recommended_doctor_type }}",
               "type": "string"
             },
             {
               "id": "2",
               "name": "urgency",
-              "value": "={{ $(\"Medical Triage Agent\").item.json.output.urgency }}",
+              "value": "={{ $(\"Code in JavaScript\").item.json.urgency }}",
               "type": "string"
             },
             {
               "id": "3",
               "name": "referral_required",
-              "value": "={{ $(\"Medical Triage Agent\").item.json.output.referral_required }}",
+              "value": "={{ $(\"Code in JavaScript\").item.json.referral_required }}",
               "type": "boolean"
             },
             {
               "id": "4",
               "name": "explanation_for_user",
-              "value": "={{ $(\"Medical Triage Agent\").item.json.output.explanation_for_user }}",
+              "value": "={{ $(\"Code in JavaScript\").item.json.explanation_for_user }}",
               "type": "string"
             },
             {
@@ -339,58 +316,58 @@
         },
         "options": {}
       },
-      "id": "30e1b4d9-dd32-445c-ba19-d3b55b394deb",
+      "id": "c29522d5-5a1d-4444-97d1-893cb78e786c",
       "name": "Merge Response",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1952,
-        336
+        4672,
+        1696
       ]
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "110cc337-972b-425a-bd04-9f51f439abb8",
+      "id": "441ab374-d95e-49cc-8471-20c5eae1aaf4",
       "name": "Respond Success",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        2176,
-        336
+        4896,
+        1696
       ]
     },
     {
       "parameters": {
         "content": "## FLOW 1: Symptom Triage + Doctor Matching\nReceives symptoms, loads user profile, runs AI triage, routes emergencies, saves consultation, finds matching doctors, and responds with recommendations.",
-        "height": 376,
-        "width": 224,
+        "height": 280,
+        "width": 336,
         "color": 2
       },
-      "id": "005b208d-aaed-423b-abb6-369bbe4527d2",
+      "id": "1bcac819-a0c7-4d1a-8e7b-b1aec8a77de6",
       "name": "Sticky Note 1ac11208",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -208,
-        112
+        2336,
+        1536
       ]
     },
     {
       "parameters": {
         "content": "## FLOW 2: Find Doctors (live)\nGeocodes the user's postcode via Nominatim, queries OpenStreetMap (Overpass) for nearby doctors, normalizes the results, and responds with the list.",
         "height": 256,
-        "width": 208,
+        "width": 336,
         "color": 3
       },
-      "id": "25aff4ff-6784-4365-879f-17478b3abc30",
+      "id": "e27a0879-5b65-4401-90be-911f59ef83f1",
       "name": "Sticky Note 0ee0e56d",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -208,
-        608
+        2336,
+        1984
       ]
     },
     {
@@ -401,10 +378,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        864,
-        256
+        3552,
+        1600
       ],
-      "id": "58ff3cea-e4bc-47a3-a586-7576ee4a3bb6",
+      "id": "276b89de-3451-4b97-a83f-a4698ec26ee0",
       "name": "Code in JavaScript"
     },
     {
@@ -414,10 +391,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1056,
-        256
+        3776,
+        1600
       ],
-      "id": "d7bea94f-7ba6-453b-b80f-b720ed694fe0",
+      "id": "d799fa86-7662-4c61-8ff3-820bfdfdc560",
       "name": "Respond to Webhook"
     },
     {
@@ -429,13 +406,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "d621783c-73f6-4296-8ddd-7ed7febb4071",
+      "id": "9d89ee77-fa04-489c-b56b-61b9aa5988ea",
       "name": "Find Doctors Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        96,
-        672
+        2752,
+        2064
       ],
       "webhookId": "fd-webhook-uuid-001"
     },
@@ -474,13 +451,13 @@
         },
         "options": {}
       },
-      "id": "1c7fa09a-a76d-4de6-a19c-53506a0007c5",
+      "id": "ebb65764-4cda-46c2-831c-9d7402b28788",
       "name": "Geocode (Nominatim)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        320,
-        672
+        2976,
+        2064
       ]
     },
     {
@@ -499,26 +476,26 @@
         },
         "options": {}
       },
-      "id": "2301590a-5737-4b61-a4de-3f2116a41e19",
+      "id": "41b577a1-91a0-4b5e-b392-87289f29a195",
       "name": "Overpass (Find Doctors)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        544,
-        672
+        3200,
+        2064
       ]
     },
     {
       "parameters": {
         "jsCode": "const resp = $input.first().json;\nconst els = resp.elements || [];\nconst MAP = { general:\"General Practitioner\", dermatology:\"Dermatologist\", cardiology:\"Cardiologist\", paediatrics:\"Pediatrician\", gynaecology:\"Gynecologist\", orthopaedics:\"Orthopedist\", psychiatry:\"Psychiatrist\", ophthalmology:\"Ophthalmologist\", otolaryngology:\"ENT\" };\nreturn els.filter(e => e.tags && e.tags.name).map(e => {\n  const t = e.tags;\n  const s = (t[\"healthcare:speciality\"] || \"\").split(\";\")[0].trim().toLowerCase();\n  return { json: {\n    osm_id: \"osm-\" + e.id,\n    name: t.name,\n    specialty: MAP[s] || (s || \"General Practitioner\"),\n    languages: t[\"language\"] || \"\",\n    street: [t[\"addr:street\"], t[\"addr:housenumber\"]].filter(Boolean).join(\" \"),\n    postcode: t[\"addr:postcode\"] || \"\",\n    city: t[\"addr:city\"] || \"\",\n    lat: e.lat, lon: e.lon,\n    phone: t.phone || t[\"contact:phone\"] || \"\",\n    website: t.website || t[\"contact:website\"] || \"\",\n    source: \"OSM\"\n  } };\n});"
       },
-      "id": "8da04f0f-b006-4f15-a103-f2792393ebc4",
+      "id": "f2cad0e9-84f5-4985-b9ae-59c226930955",
       "name": "Normalize Doctors",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        768,
-        672
+        3424,
+        2064
       ]
     },
     {
@@ -526,13 +503,13 @@
         "respondWith": "allIncomingItems",
         "options": {}
       },
-      "id": "c5249296-870f-4c80-85f7-157620bcf392",
+      "id": "a77eb6cb-631f-4dfc-9df1-2fcd98d30cf9",
       "name": "Respond Doctors",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        976,
-        672
+        3648,
+        2064
       ]
     },
     {
@@ -563,13 +540,13 @@
           ]
         }
       },
-      "id": "d39bc138-0117-480e-b0a9-d0586017249f",
+      "id": "2b7f785c-2f66-4d65-88e0-5525b3d8c47e",
       "name": "Create Appointment1",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        320,
-        1040
+        2976,
+        2384
       ],
       "credentials": {
         "supabaseApi": {
@@ -584,29 +561,29 @@
         "responseBody": "={{ { \"status\": \"confirmed\" } }}",
         "options": {}
       },
-      "id": "8095ee37-535a-4167-8426-961cefe0ae78",
+      "id": "7cad5284-4d34-469c-8d23-17cdc4b5befd",
       "name": "Respond Booking1",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        768,
-        1040
+        3200,
+        2384
       ]
     },
     {
       "parameters": {
         "content": "## FLOW 3: Booking\nReceives booking request, creates appointment in Supabase, sends confirmation email, and responds with status.",
-        "height": 280,
-        "width": 208,
+        "height": 216,
+        "width": 336,
         "color": 4
       },
-      "id": "28862dc7-e98e-4ccc-99ce-0269c56cdb07",
+      "id": "cbe0040b-31fc-4d02-8ff2-c5523efd1144",
       "name": "Sticky Note a84fa8de1",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -208,
-        944
+        2336,
+        2336
       ]
     },
     {
@@ -618,30 +595,30 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "e727f05d-b819-4520-9a27-0a6a93679cf7",
+      "id": "6b08e547-2051-4a35-b38d-89aeb87fdb26",
       "name": "Booking Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        96,
-        1040
+        2752,
+        2384
       ],
       "webhookId": "fc581d3f-604e-454f-a92f-316da3d3cdcf"
     },
     {
       "parameters": {
         "content": "## FLOW 4: Registration + Email Confirmation & Resend\nMirrors the app's Supabase Auth signup (script.js handleRegister / resendConfirmation).\n\n- **Register** calls Supabase Auth `/auth/v1/signup`, passing the profile fields as user metadata and `redirect_to` as the confirmation link target. Supabase then sends the branded \"Confirm signup\" email.\n- **Resend Confirmation** calls Supabase Auth `/auth/v1/resend` (type=signup) to send a fresh confirmation link.\n\nNOTE: the confirmation email is sent and templated by Supabase (Authentication > Emails > Templates), NOT by n8n. n8n only triggers it. The `apikey` header uses the publishable (anon) key.",
-        "height": 360,
-        "width": 380,
+        "height": 536,
+        "width": 332,
         "color": 5
       },
-      "id": "f4a00000-0000-4000-8000-000000000001",
+      "id": "422af8b6-16d0-46ab-bb8d-b38f680a46de",
       "name": "Sticky Note Flow4",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -208,
-        1336
+        2336,
+        2672
       ]
     },
     {
@@ -653,13 +630,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "f4a00000-0000-4000-8000-000000000002",
+      "id": "4df16b67-86a9-4495-ae85-c5ffe830abdf",
       "name": "Register Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        96,
-        1400
+        2752,
+        2768
       ],
       "webhookId": "a1b2c3d4-0001-4aaa-bbbb-registerhook01"
     },
@@ -694,13 +671,13 @@
         "jsonBody": "={\n  \"email\": \"{{ $json.body.email }}\",\n  \"password\": \"{{ $json.body.password }}\",\n  \"data\": {\n    \"first_name\": \"{{ $json.body.first_name }}\",\n    \"last_name\": \"{{ $json.body.last_name }}\",\n    \"birthdate\": \"{{ $json.body.birthdate }}\",\n    \"language\": \"{{ $json.body.language }}\"\n  }\n}",
         "options": {}
       },
-      "id": "f4a00000-0000-4000-8000-000000000003",
+      "id": "c025a5e5-7a02-48a1-ab5f-80d63ab7e678",
       "name": "Supabase Sign Up",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        320,
-        1400
+        2976,
+        2768
       ]
     },
     {
@@ -709,13 +686,13 @@
         "responseBody": "={{ { \"status\": \"confirmation_sent\", \"email\": ($json.email || $json.user?.email || $('Register Webhook').item.json.body.email) } }}",
         "options": {}
       },
-      "id": "f4a00000-0000-4000-8000-000000000004",
+      "id": "a4029229-37af-4b2c-9f23-20112de9bb0b",
       "name": "Respond Registration",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        560,
-        1400
+        3200,
+        2768
       ]
     },
     {
@@ -727,13 +704,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "f4a00000-0000-4000-8000-000000000005",
+      "id": "8e70b316-61d1-491e-85bf-f558ec0209c8",
       "name": "Resend Confirmation Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        96,
-        1560
+        2752,
+        2992
       ],
       "webhookId": "a1b2c3d4-0002-4aaa-bbbb-resendhook002"
     },
@@ -768,13 +745,13 @@
         "jsonBody": "={\n  \"type\": \"signup\",\n  \"email\": \"{{ $json.body.email }}\"\n}",
         "options": {}
       },
-      "id": "f4a00000-0000-4000-8000-000000000006",
+      "id": "56ba0a63-f20b-440f-b2ae-aa1a181f1d84",
       "name": "Supabase Resend Confirmation",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        320,
-        1560
+        2976,
+        2992
       ]
     },
     {
@@ -783,13 +760,29 @@
         "responseBody": "={{ { \"status\": \"resent\" } }}",
         "options": {}
       },
-      "id": "f4a00000-0000-4000-8000-000000000007",
+      "id": "ebc3fc77-0464-4717-a478-ec5b5815712c",
       "name": "Respond Resend",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        560,
-        1560
+        3200,
+        2992
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## FUTURE FEATURE: Emergency Response\nFuture feature branch which will include a smarter AI to identify possible emergency situations. Currently only identifies \"Chest Pain\" as an emergency from prior node (Route by Emergency)",
+        "height": 184,
+        "width": 544,
+        "color": 2
+      },
+      "id": "392d9ac5-bd1c-42de-be10-7f2bb60efdd0",
+      "name": "Sticky Note 1ac",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4128,
+        1280
       ]
     }
   ],
@@ -1040,7 +1033,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "efaee0ee-8223-4358-92f4-e957c814c6c9",
+  "versionId": "4e8b4d4b-0349-4e60-a2ee-a0803364781a",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "be9b52dc8252215ea5a92389938ac9df68d87ce36092a9341a708e5263b4fcdb"

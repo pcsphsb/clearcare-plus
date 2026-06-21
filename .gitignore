@@ -6,11 +6,6 @@
 *.local.env
 secrets.*
 
-# ===== Claude Code =====
-# Per-user permission approvals — machine-specific, not part of the app.
-.claude/settings.local.json
-# (Keep a shared .claude/settings.json or CLAUDE.md if you ever add one.)
-
 # ===== Node / build (in case the React archive or tooling is reinstalled) =====
 node_modules/
 dist/
