@@ -9,13 +9,13 @@
           "systemMessage": "You are the triage assistant for ClearCare+, a health-insurance navigation app for immigrants in Germany. You help users reach the RIGHT TYPE of doctor. You are a navigator, NOT a diagnostician.\n\nRULES:\n1. Recommend ONE doctor type only (e.g. General Practitioner, Dermatologist, Cardiologist, ENT, Orthopedist, Gynecologist, Pediatrician, Psychiatrist, Ophthalmologist, Dentist, Urologist, Gastroenterologist).\n2. NEVER name a disease, diagnosis, or treatment. If asked what is wrong, say you only help find the right doctor.\n3. \"urgency\" is EXACTLY one of: routine, soon, emergency.\n4. EMERGENCY OVERRIDE: if symptoms include red flags (chest pain, difficulty breathing, stroke signs, severe bleeding, fainting, suicidal thoughts, severe allergic reaction) set urgency=emergency, needs_human_review=true, recommended_doctor_type=\"Emergency (call 112)\", and tell the user to call 112 now.\n5. GERMAN REFERRAL RULE: specialists need a GP referral first. Set referral_required=true for a specialist; false for General Practitioner or Emergency.\n6. Write \"explanation_for_user\" in the user's language. Warm, simple, 1-2 sentences, no jargon.\n7. If symptoms are vague, default to General Practitioner. Prefer \"soon\" over \"routine\" if symptoms are painful, worsening, or persistent."
         }
       },
-      "id": "450de891-7eb1-4a2a-9bb9-4a4a4dbffd8c",
+      "id": "8e14eab8-7155-44f4-9030-35976f3bd05a",
       "name": "Medical Triage Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        704,
-        32
+        528,
+        176
       ]
     },
     {
@@ -28,13 +28,13 @@
           "explanation_for_user": "Based on your symptoms, I recommend seeing a General Practitioner."
         }
       },
-      "id": "19037727-d220-4c9b-87ad-5ccb1f17df83",
+      "id": "0c7d388a-5aa0-4bdf-ab6c-08ad92637dae",
       "name": "Structured Output Parser",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        848,
-        256
+        672,
+        368
       ]
     },
     {
@@ -48,10 +48,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        704,
-        256
+        528,
+        368
       ],
-      "id": "0b722d1a-1aaa-42f7-aa8f-688b34efa25e",
+      "id": "702391ba-e00d-4428-acf8-c555a897b7eb",
       "name": "Groq Chat Model",
       "credentials": {
         "groqApi": {
@@ -69,13 +69,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "153534aa-5da7-4456-9655-38d2cdb87181",
+      "id": "a3f23c6f-8385-48ac-88e7-5a329440930a",
       "name": "Symptom Check Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        256,
-        144
+        96,
+        256
       ],
       "webhookId": "cdd4927b-d331-4bb5-b1bd-0e809527ebd6"
     },
@@ -92,13 +92,13 @@
           ]
         }
       },
-      "id": "79614dd2-32df-4f58-9b6e-ff2b6edc6c7b",
+      "id": "c068a69b-5182-4434-8a6b-17de76a1503e",
       "name": "Load User Profile",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        480,
-        144
+        320,
+        256
       ],
       "credentials": {
         "supabaseApi": {
@@ -139,13 +139,13 @@
           "renameFallbackOutput": "Continue"
         }
       },
-      "id": "4c77a4e6-bfb2-4216-9abc-e333803ae063",
+      "id": "c8a1d0eb-0b11-49af-88b1-29072effcab3",
       "name": "Route by Urgency",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        1248,
-        128
+        1264,
+        256
       ]
     },
     {
@@ -186,26 +186,26 @@
         },
         "options": {}
       },
-      "id": "294d8e1a-f657-4524-8fea-14eea1bade3a",
+      "id": "a79f307a-e0a6-400b-8a73-c0ccb86af642",
       "name": "Emergency Message",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1488,
-        48
+        1504,
+        144
       ]
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "d9475e0f-b751-4fd7-84d5-01b984ecbb66",
+      "id": "afd407d1-dffe-4926-8569-d5f53d5d9991",
       "name": "Respond Emergency",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1712,
-        48
+        1728,
+        144
       ]
     },
     {
@@ -244,13 +244,13 @@
           ]
         }
       },
-      "id": "84ee4637-d890-4bdb-90fc-b2b652f08c6a",
+      "id": "d2ad5568-109a-47e7-867f-f96673a0466b",
       "name": "Save Consultation",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1488,
-        240
+        1504,
+        336
       ],
       "credentials": {
         "supabaseApi": {
@@ -285,13 +285,13 @@
           ]
         }
       },
-      "id": "43bac3f6-fbbb-4900-abac-5b20f6616cf0",
+      "id": "0be49d1a-a81c-428e-9dbf-d9fbfb6444b0",
       "name": "Find Matching Doctors",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1712,
-        240
+        1728,
+        336
       ],
       "credentials": {
         "supabaseApi": {
@@ -339,155 +339,58 @@
         },
         "options": {}
       },
-      "id": "95b02bc2-d81b-4da3-a433-751261c1f76e",
+      "id": "30e1b4d9-dd32-445c-ba19-d3b55b394deb",
       "name": "Merge Response",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1936,
-        240
+        1952,
+        336
       ]
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "98c759bb-c688-4f4e-b03a-a85857ded5f6",
+      "id": "110cc337-972b-425a-bd04-9f51f439abb8",
       "name": "Respond Success",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        2160,
-        240
-      ]
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "book-appointment",
-        "responseMode": "responseNode",
-        "options": {
-          "allowedOrigins": "*"
-        }
-      },
-      "id": "c3504e8b-8659-4a3e-a2d6-d0a64fd72126",
-      "name": "Booking Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [
-        256,
-        1056
-      ],
-      "webhookId": "fc581d3f-604e-454f-a92f-316da3d3cdcf"
-    },
-    {
-      "parameters": {
-        "tableId": "appointments",
-        "fieldsUi": {
-          "fieldValues": [
-            {
-              "fieldId": "user_id",
-              "fieldValue": "={{ $json.body.user_id }}"
-            },
-            {
-              "fieldId": "doctor_id",
-              "fieldValue": "={{ $json.body.doctor_id }}"
-            },
-            {
-              "fieldId": "doctor_name",
-              "fieldValue": "={{ $json.body.doctor_name }}"
-            },
-            {
-              "fieldId": "doctor_specialty",
-              "fieldValue": "={{ $json.body.doctor_specialty }}"
-            },
-            {
-              "fieldId": "doctor_address",
-              "fieldValue": "={{ $json.body.doctor_address }}"
-            },
-            {
-              "fieldId": "datetime",
-              "fieldValue": "={{ $json.body.datetime }}"
-            }
-          ]
-        }
-      },
-      "id": "5196451c-486d-44c9-8c0a-92bb4f3c2d41",
-      "name": "Create Appointment",
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        480,
-        1056
-      ],
-      "credentials": {
-        "supabaseApi": {
-          "id": "y04Dro1zdqBdHu2V",
-          "name": "Supabase account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ { \"status\": \"confirmed\" } }}",
-        "options": {}
-      },
-      "id": "2961c66b-9662-41df-80d2-1f9accff1bfa",
-      "name": "Respond Booking",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        928,
-        1056
+        2176,
+        336
       ]
     },
     {
       "parameters": {
         "content": "## FLOW 1: Symptom Triage + Doctor Matching\nReceives symptoms, loads user profile, runs AI triage, routes emergencies, saves consultation, finds matching doctors, and responds with recommendations.",
-        "height": 552,
-        "width": 2640,
+        "height": 376,
+        "width": 224,
         "color": 2
       },
-      "id": "b917499f-53c5-45d1-905f-064f113d3671",
+      "id": "005b208d-aaed-423b-abb6-369bbe4527d2",
       "name": "Sticky Note 1ac11208",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        160,
-        -112
+        -208,
+        112
       ]
     },
     {
       "parameters": {
-        "content": "## FLOW 2: Registration\nReceives user registration data, upserts profile in Supabase, sends welcome email, and responds with success.",
-        "height": 320,
-        "width": 1072,
+        "content": "## FLOW 2: Find Doctors (live)\nGeocodes the user's postcode via Nominatim, queries OpenStreetMap (Overpass) for nearby doctors, normalizes the results, and responds with the list.",
+        "height": 256,
+        "width": 208,
         "color": 3
       },
-      "id": "2ec2f8c7-d069-42d0-aa87-d2a3ba1ca49b",
+      "id": "25aff4ff-6784-4365-879f-17478b3abc30",
       "name": "Sticky Note 0ee0e56d",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        160,
-        512
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## FLOW 3: Booking\nReceives booking request, creates appointment in Supabase, sends confirmation email, and responds with status.",
-        "height": 344,
-        "width": 1072,
-        "color": 4
-      },
-      "id": "55724881-c5fe-4157-b91b-13f773e8e65b",
-      "name": "Sticky Note a84fa8de",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        160,
-        896
+        -208,
+        608
       ]
     },
     {
@@ -498,10 +401,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1024,
-        32
+        864,
+        256
       ],
-      "id": "82c89f65-650c-48b2-ac55-9b6ac992f84e",
+      "id": "58ff3cea-e4bc-47a3-a586-7576ee4a3bb6",
       "name": "Code in JavaScript"
     },
     {
@@ -511,10 +414,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1024,
-        240
+        1056,
+        256
       ],
-      "id": "06b364b7-5062-41bd-8cff-32fe1dc382bc",
+      "id": "d7bea94f-7ba6-453b-b80f-b720ed694fe0",
       "name": "Respond to Webhook"
     },
     {
@@ -526,19 +429,18 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "fd-xx3l987l",
+      "id": "d621783c-73f6-4296-8ddd-7ed7febb4071",
       "name": "Find Doctors Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        0,
-        1300
+        96,
+        672
       ],
       "webhookId": "fd-webhook-uuid-001"
     },
     {
       "parameters": {
-        "method": "GET",
         "url": "https://nominatim.openstreetmap.org/search",
         "sendQuery": true,
         "queryParameters": {
@@ -572,13 +474,13 @@
         },
         "options": {}
       },
-      "id": "fd-ctliet1o",
+      "id": "1c7fa09a-a76d-4de6-a19c-53506a0007c5",
       "name": "Geocode (Nominatim)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        220,
-        1300
+        320,
+        672
       ]
     },
     {
@@ -597,26 +499,26 @@
         },
         "options": {}
       },
-      "id": "fd-04xtr51v",
+      "id": "2301590a-5737-4b61-a4de-3f2116a41e19",
       "name": "Overpass (Find Doctors)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        440,
-        1300
+        544,
+        672
       ]
     },
     {
       "parameters": {
         "jsCode": "const resp = $input.first().json;\nconst els = resp.elements || [];\nconst MAP = { general:\"General Practitioner\", dermatology:\"Dermatologist\", cardiology:\"Cardiologist\", paediatrics:\"Pediatrician\", gynaecology:\"Gynecologist\", orthopaedics:\"Orthopedist\", psychiatry:\"Psychiatrist\", ophthalmology:\"Ophthalmologist\", otolaryngology:\"ENT\" };\nreturn els.filter(e => e.tags && e.tags.name).map(e => {\n  const t = e.tags;\n  const s = (t[\"healthcare:speciality\"] || \"\").split(\";\")[0].trim().toLowerCase();\n  return { json: {\n    osm_id: \"osm-\" + e.id,\n    name: t.name,\n    specialty: MAP[s] || (s || \"General Practitioner\"),\n    languages: t[\"language\"] || \"\",\n    street: [t[\"addr:street\"], t[\"addr:housenumber\"]].filter(Boolean).join(\" \"),\n    postcode: t[\"addr:postcode\"] || \"\",\n    city: t[\"addr:city\"] || \"\",\n    lat: e.lat, lon: e.lon,\n    phone: t.phone || t[\"contact:phone\"] || \"\",\n    website: t.website || t[\"contact:website\"] || \"\",\n    source: \"OSM\"\n  } };\n});"
       },
-      "id": "fd-l6v5v28a",
+      "id": "8da04f0f-b006-4f15-a103-f2792393ebc4",
       "name": "Normalize Doctors",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        660,
-        1300
+        768,
+        672
       ]
     },
     {
@@ -624,13 +526,270 @@
         "respondWith": "allIncomingItems",
         "options": {}
       },
-      "id": "fd-jg6oi3xj",
+      "id": "c5249296-870f-4c80-85f7-157620bcf392",
       "name": "Respond Doctors",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        880,
-        1300
+        976,
+        672
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "appointments",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "user_id",
+              "fieldValue": "={{ $json.body.user_id }}"
+            },
+            {
+              "fieldId": "doctor_name",
+              "fieldValue": "={{ $json.body.doctor_name }}"
+            },
+            {
+              "fieldId": "doctor_specialty",
+              "fieldValue": "={{ $json.body.doctor_specialty }}"
+            },
+            {
+              "fieldId": "doctor_address",
+              "fieldValue": "={{ $json.body.doctor_address }}"
+            },
+            {
+              "fieldId": "datetime",
+              "fieldValue": "={{ $json.body.datetime }}"
+            }
+          ]
+        }
+      },
+      "id": "d39bc138-0117-480e-b0a9-d0586017249f",
+      "name": "Create Appointment1",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        320,
+        1040
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "y04Dro1zdqBdHu2V",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"confirmed\" } }}",
+        "options": {}
+      },
+      "id": "8095ee37-535a-4167-8426-961cefe0ae78",
+      "name": "Respond Booking1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        768,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## FLOW 3: Booking\nReceives booking request, creates appointment in Supabase, sends confirmation email, and responds with status.",
+        "height": 280,
+        "width": 208,
+        "color": 4
+      },
+      "id": "28862dc7-e98e-4ccc-99ce-0269c56cdb07",
+      "name": "Sticky Note a84fa8de1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        944
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "book-appointment",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "e727f05d-b819-4520-9a27-0a6a93679cf7",
+      "name": "Booking Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        96,
+        1040
+      ],
+      "webhookId": "fc581d3f-604e-454f-a92f-316da3d3cdcf"
+    },
+    {
+      "parameters": {
+        "content": "## FLOW 4: Registration + Email Confirmation & Resend\nMirrors the app's Supabase Auth signup (script.js handleRegister / resendConfirmation).\n\n- **Register** calls Supabase Auth `/auth/v1/signup`, passing the profile fields as user metadata and `redirect_to` as the confirmation link target. Supabase then sends the branded \"Confirm signup\" email.\n- **Resend Confirmation** calls Supabase Auth `/auth/v1/resend` (type=signup) to send a fresh confirmation link.\n\nNOTE: the confirmation email is sent and templated by Supabase (Authentication > Emails > Templates), NOT by n8n. n8n only triggers it. The `apikey` header uses the publishable (anon) key.",
+        "height": 360,
+        "width": 380,
+        "color": 5
+      },
+      "id": "f4a00000-0000-4000-8000-000000000001",
+      "name": "Sticky Note Flow4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        1336
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "register",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "f4a00000-0000-4000-8000-000000000002",
+      "name": "Register Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        96,
+        1400
+      ],
+      "webhookId": "a1b2c3d4-0001-4aaa-bbbb-registerhook01"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ossxctklhsoiiigixuvt.supabase.co/auth/v1/signup",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "redirect_to",
+              "value": "https://pcsphsb.github.io/clearcare-plus/index.html"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "sb_publishable_ivwCyL4ilX00fpvfpIgZtg_hrxl-lbk"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"email\": \"{{ $json.body.email }}\",\n  \"password\": \"{{ $json.body.password }}\",\n  \"data\": {\n    \"first_name\": \"{{ $json.body.first_name }}\",\n    \"last_name\": \"{{ $json.body.last_name }}\",\n    \"birthdate\": \"{{ $json.body.birthdate }}\",\n    \"language\": \"{{ $json.body.language }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "f4a00000-0000-4000-8000-000000000003",
+      "name": "Supabase Sign Up",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        1400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"confirmation_sent\", \"email\": ($json.email || $json.user?.email || $('Register Webhook').item.json.body.email) } }}",
+        "options": {}
+      },
+      "id": "f4a00000-0000-4000-8000-000000000004",
+      "name": "Respond Registration",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        560,
+        1400
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "resend-confirmation",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "f4a00000-0000-4000-8000-000000000005",
+      "name": "Resend Confirmation Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        96,
+        1560
+      ],
+      "webhookId": "a1b2c3d4-0002-4aaa-bbbb-resendhook002"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ossxctklhsoiiigixuvt.supabase.co/auth/v1/resend",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "redirect_to",
+              "value": "https://pcsphsb.github.io/clearcare-plus/index.html"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "sb_publishable_ivwCyL4ilX00fpvfpIgZtg_hrxl-lbk"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"type\": \"signup\",\n  \"email\": \"{{ $json.body.email }}\"\n}",
+        "options": {}
+      },
+      "id": "f4a00000-0000-4000-8000-000000000006",
+      "name": "Supabase Resend Confirmation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        1560
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"resent\" } }}",
+        "options": {}
+      },
+      "id": "f4a00000-0000-4000-8000-000000000007",
+      "name": "Respond Resend",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        560,
+        1560
       ]
     }
   ],
@@ -645,11 +804,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Structured Output Parser": {
-      "ai_outputParser": [
-        []
       ]
     },
     "Groq Chat Model": {
@@ -747,28 +901,6 @@
         ]
       ]
     },
-    "Booking Webhook": {
-      "main": [
-        [
-          {
-            "node": "Create Appointment",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create Appointment": {
-      "main": [
-        [
-          {
-            "node": "Respond Booking",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Code in JavaScript": {
       "main": [
         [
@@ -834,15 +966,86 @@
           }
         ]
       ]
+    },
+    "Create Appointment1": {
+      "main": [
+        [
+          {
+            "node": "Respond Booking1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Booking Webhook": {
+      "main": [
+        [
+          {
+            "node": "Create Appointment1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register Webhook": {
+      "main": [
+        [
+          {
+            "node": "Supabase Sign Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Sign Up": {
+      "main": [
+        [
+          {
+            "node": "Respond Registration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resend Confirmation Webhook": {
+      "main": [
+        [
+          {
+            "node": "Supabase Resend Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Resend Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Respond Resend",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
-    "availableInMCP": false,
-    "timeSavedMode": "fixed",
-    "callerPolicy": "workflowsFromSameOwner",
-    "executionTimeout": 180
-  }
+    "availableInMCP": false
+  },
+  "versionId": "efaee0ee-8223-4358-92f4-e957c814c6c9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "be9b52dc8252215ea5a92389938ac9df68d87ce36092a9341a708e5263b4fcdb"
+  },
+  "nodeGroups": [],
+  "id": "xh69iloQa5EHgLke",
+  "tags": []
 }

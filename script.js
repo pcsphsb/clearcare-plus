@@ -31,8 +31,8 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
                              (the manual step-by-step demo). Each n8n Webhook
                              node also needs Allowed Origins (CORS) = *.
    ===================================================================== */
-const USE_N8N = false;
-const N8N_PRODUCTION = true;
+const USE_N8N = true;
+const N8N_PRODUCTION = false;
 
 /* n8n webhook URLs (only used when USE_N8N = true). */
 const N8N_BASE = "https://pcsphsb.app.n8n.cloud";
@@ -40,6 +40,8 @@ const _N8N_SEG = N8N_PRODUCTION ? "webhook" : "webhook-test";
 const N8N_SYMPTOM_WEBHOOK = `${N8N_BASE}/${_N8N_SEG}/symptom-check`;
 const N8N_DOCTORS_WEBHOOK = `${N8N_BASE}/${_N8N_SEG}/find-doctors`;
 const N8N_BOOKING_WEBHOOK = `${N8N_BASE}/${_N8N_SEG}/book-appointment`;
+const N8N_REGISTER_WEBHOOK = `${N8N_BASE}/${_N8N_SEG}/register`;
+const N8N_RESEND_WEBHOOK = `${N8N_BASE}/${_N8N_SEG}/resend-confirmation`;
 
 /* Supabase Edge Functions (used when USE_N8N = false, i.e. the standalone app).
    See supabase/functions/ and the Edge Functions Setup doc. */
@@ -643,28 +645,49 @@ async function handleRegister(e){
   const btn = document.getElementById("register-btn");
   btn.disabled = true; btn.textContent = "Creating account…"; banner("register-err", "");
 
-  const { data, error } = await sb.auth.signUp({
-    email, password: pw,
-    options: {
-      data: { first_name: first, last_name: last, birthdate: birth, language: lang },
-      // Where the confirmation link sends the user back to. Uses the app base URL
-      // (origin + subpath) so it works both on localhost and under the GitHub Pages
-      // /clearcare-plus/ subpath.
-      emailRedirectTo: appBaseUrl() + "index.html"
+  /* USE_N8N=true -> route signup through the n8n "register" webhook, which calls
+     Supabase Auth /signup for us (so the SAME confirmation email goes out). This
+     makes registration visible inside the n8n workflow for the demo. USE_N8N=false
+     (default) -> call Supabase Auth directly from the browser. Either way Supabase
+     is the one that sends + templates the confirmation email. */
+  if (USE_N8N){
+    let sent = false;
+    try {
+      const res = await fetch(N8N_REGISTER_WEBHOOK, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password: pw, first_name: first, last_name: last, birthdate: birth, language: lang })
+      });
+      sent = res.ok;
+      if (!sent) console.error("[n8n] register webhook HTTP", res.status);
+    } catch (err) { console.error(err); }
+    btn.disabled = false; btn.textContent = "Create Account";
+    if (!sent){ banner("register-err", "Registration service is unavailable. Please try again."); return; }
+    console.log("📧 [n8n] Registration sent -> Supabase confirmation email ->", email);
+  } else {
+    const { data, error } = await sb.auth.signUp({
+      email, password: pw,
+      options: {
+        data: { first_name: first, last_name: last, birthdate: birth, language: lang },
+        // Where the confirmation link sends the user back to. Uses the app base URL
+        // (origin + subpath) so it works both on localhost and under the GitHub Pages
+        // /clearcare-plus/ subpath.
+        emailRedirectTo: appBaseUrl() + "index.html"
+      }
+    });
+
+    btn.disabled = false; btn.textContent = "Create Account";
+    if (error){ banner("register-err", error.message); console.error(error); return; }
+
+    // With "Confirm email" ON, signUp does NOT create a session — the user must click
+    // the link in the confirmation email before they can log in. (Supabase returns a
+    // user with an empty identities array if the email was already registered.)
+    if (data.user && data.user.identities && data.user.identities.length === 0){
+      banner("register-err", "This email is already registered. Please log in.");
+      return;
     }
-  });
-
-  btn.disabled = false; btn.textContent = "Create Account";
-  if (error){ banner("register-err", error.message); console.error(error); return; }
-
-  // With "Confirm email" ON, signUp does NOT create a session — the user must click
-  // the link in the confirmation email before they can log in. (Supabase returns a
-  // user with an empty identities array if the email was already registered.)
-  if (data.user && data.user.identities && data.user.identities.length === 0){
-    banner("register-err", "This email is already registered. Please log in.");
-    return;
+    console.log("📧 [Supabase] Confirmation email sent ->", email);
   }
-  console.log("📧 [Supabase] Confirmation email sent ->", email);
 
   document.getElementById("register-form").reset();
   document.getElementById("rules").classList.add("hidden");
@@ -713,13 +736,32 @@ async function resendConfirmation(){
   }
   const link = document.getElementById("resend-link");
   link.textContent = "Sending…"; link.style.pointerEvents = "none";
-  const { error } = await sb.auth.resend({
-    type: "signup",
-    email,
-    options: { emailRedirectTo: appBaseUrl() + "index.html" }
-  });
-  link.textContent = "Resend it"; link.style.pointerEvents = "";
-  if (error){ banner("login-err", error.message); console.error(error); return; }
+
+  /* USE_N8N=true -> n8n "resend-confirmation" webhook (calls Supabase Auth /resend),
+     so the resend step is visible in the n8n workflow. false -> Supabase Auth
+     directly. Both ask Supabase to send a fresh confirmation link. */
+  if (USE_N8N){
+    let sent = false;
+    try {
+      const res = await fetch(N8N_RESEND_WEBHOOK, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      sent = res.ok;
+      if (!sent) console.error("[n8n] resend webhook HTTP", res.status);
+    } catch (err) { console.error(err); }
+    link.textContent = "Resend it"; link.style.pointerEvents = "";
+    if (!sent){ banner("login-err", "Resend service is unavailable. Please try again."); return; }
+  } else {
+    const { error } = await sb.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: appBaseUrl() + "index.html" }
+    });
+    link.textContent = "Resend it"; link.style.pointerEvents = "";
+    if (error){ banner("login-err", error.message); console.error(error); return; }
+  }
 
   banner("login-err", "");
   // Supabase deliberately returns no error here even if the email is unregistered,
