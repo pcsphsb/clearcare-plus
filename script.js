@@ -638,22 +638,32 @@ async function handleRegister(e){
   const btn = document.getElementById("register-btn");
   btn.disabled = true; btn.textContent = "Creating account…"; banner("register-err", "");
 
-  const { error } = await sb.auth.signUp({
+  const { data, error } = await sb.auth.signUp({
     email, password: pw,
-    options: { data: { first_name: first, last_name: last, birthdate: birth, language: lang } }
+    options: {
+      data: { first_name: first, last_name: last, birthdate: birth, language: lang },
+      // Where the confirmation link sends the user back to. Uses the current origin
+      // so it works on whatever localhost port (Live Server, etc.) is serving the app.
+      emailRedirectTo: window.location.origin + "/index.html"
+    }
   });
 
   btn.disabled = false; btn.textContent = "Create Account";
   if (error){ banner("register-err", error.message); console.error(error); return; }
 
-  // Email confirmation is OFF, so signUp auto-creates a session. Sign out so the
-  // user must explicitly log in (matches the registration-completed -> login flow).
-  await sb.auth.signOut();
-  console.log("✅ [Supabase] User created");
+  // With "Confirm email" ON, signUp does NOT create a session — the user must click
+  // the link in the confirmation email before they can log in. (Supabase returns a
+  // user with an empty identities array if the email was already registered.)
+  if (data.user && data.user.identities && data.user.identities.length === 0){
+    banner("register-err", "This email is already registered. Please log in.");
+    return;
+  }
+  console.log("📧 [Supabase] Confirmation email sent ->", email);
 
   document.getElementById("register-form").reset();
   document.getElementById("rules").classList.add("hidden");
-  document.getElementById("login-msg-text").textContent = "Account created. Please log in.";
+  document.getElementById("login-msg-text").textContent =
+    "Almost there! Check your email and click the confirmation link, then log in.";
   document.getElementById("login-msg").classList.remove("hidden");
   showView("login");
 }
@@ -670,9 +680,41 @@ async function handleLogin(e){
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
   btn.disabled = false; btn.textContent = "Sign In";
 
-  if (error || !data.user){ banner("login-err", "Invalid email or password. Please try again."); return; }
+  if (error || !data.user){
+    // Supabase returns a specific message when the account exists but the email
+    // link hasn't been clicked yet — surface that instead of "wrong password".
+    const msg = /confirm/i.test(error?.message || "")
+      ? "Please confirm your email first — check your inbox for the link."
+      : "Invalid email or password. Please try again.";
+    banner("login-err", msg); return;
+  }
   console.log("✅ [Supabase] Logged in -> homepage");
   window.location.href = "homepage.html";   // navigate to the homepage
+}
+
+// Resend the confirmation email. Safety net for the live demo if the first email
+// is slow. Reads whatever address is already typed in the login email field.
+async function resendConfirmation(){
+  const email = document.getElementById("l-email").value.trim();
+  if (!isEmail(email)){
+    banner("login-err", "Type your email in the field above first, then tap Resend.");
+    return;
+  }
+  const link = document.getElementById("resend-link");
+  link.textContent = "Sending…"; link.style.pointerEvents = "none";
+  const { error } = await sb.auth.resend({
+    type: "signup",
+    email,
+    options: { emailRedirectTo: window.location.origin + "/index.html" }
+  });
+  link.textContent = "Resend it"; link.style.pointerEvents = "";
+  if (error){ banner("login-err", error.message); console.error(error); return; }
+
+  banner("login-err", "");
+  document.getElementById("login-msg-text").textContent =
+    "Confirmation email sent again. Please check your inbox.";
+  document.getElementById("login-msg").classList.remove("hidden");
+  console.log("📧 [Supabase] Confirmation resent ->", email);
 }
 
 /* ===================== HOMEPAGE (guarded) ===================== */
