@@ -34,7 +34,7 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const USE_N8N = false;
 const N8N_PRODUCTION = true;
 
-/* n8n webhooek URLs (only used when USE_N8N = true). */
+/* n8n webhook URLs (only used when USE_N8N = true). */
 const N8N_BASE = "https://pcsphsb.app.n8n.cloud";
 const _N8N_SEG = N8N_PRODUCTION ? "webhook" : "webhook-test";
 const N8N_SYMPTOM_WEBHOOK = `${N8N_BASE}/${_N8N_SEG}/symptom-check`;
