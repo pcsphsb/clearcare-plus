@@ -509,6 +509,11 @@ function fieldErr(id, msg){
   return !msg;
 }
 function isEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+// Base URL of the app, including any subpath. On GitHub Pages the app lives under
+// /clearcare-plus/, but window.location.origin drops that subpath. Resolving "."
+// against the current page keeps it (e.g. https://pcsphsb.github.io/clearcare-plus/),
+// and on localhost it just returns http://localhost:PORT/. Used for email redirects.
+function appBaseUrl(){ return new URL(".", window.location.href).href; }
 function banner(id, msg){
   const el = document.getElementById(id);
   if (msg){ el.textContent = msg; el.classList.remove("hidden"); }
@@ -642,9 +647,10 @@ async function handleRegister(e){
     email, password: pw,
     options: {
       data: { first_name: first, last_name: last, birthdate: birth, language: lang },
-      // Where the confirmation link sends the user back to. Uses the current origin
-      // so it works on whatever localhost port (Live Server, etc.) is serving the app.
-      emailRedirectTo: window.location.origin + "/index.html"
+      // Where the confirmation link sends the user back to. Uses the app base URL
+      // (origin + subpath) so it works both on localhost and under the GitHub Pages
+      // /clearcare-plus/ subpath.
+      emailRedirectTo: appBaseUrl() + "index.html"
     }
   });
 
@@ -705,7 +711,7 @@ async function resendConfirmation(){
   const { error } = await sb.auth.resend({
     type: "signup",
     email,
-    options: { emailRedirectTo: window.location.origin + "/index.html" }
+    options: { emailRedirectTo: appBaseUrl() + "index.html" }
   });
   link.textContent = "Resend it"; link.style.pointerEvents = "";
   if (error){ banner("login-err", error.message); console.error(error); return; }
