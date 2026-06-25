@@ -13,11 +13,18 @@
 body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   background:var(--bg);color:var(--text);min-height:100vh;
   display:flex;align-items:center;justify-content:center;padding:16px;}
-/* Fixed iPhone frame (390 x 844, iPhone 14/15). Content scrolls inside; any
-   leftover room below the content is just white space for now. */
-/* Device frame - iPhone-style black bezel. It clips (overflow:hidden) so the
-   screen's rounded corners contain the scrollbar; the .screen inside scrolls. */
-.phone{width:390px;max-width:100%;height:844px;max-height:calc(100vh - 24px);
+/* iPhone frame (390 x 844, iPhone 14/15). Content scrolls inside the .screen.
+   Device frame - iPhone-style black bezel. It clips (overflow:hidden) so the
+   screen's rounded corners contain the scrollbar; the .screen inside scrolls.
+
+   SIZING: the frame keeps a LOCKED 390:844 shape via aspect-ratio. We set the
+   height to fit the viewport (capped at 844px) and let the width follow from the
+   ratio, so on a short/zoomed-in desktop window the whole phone scales DOWN
+   proportionally instead of squishing. max-width is a safety clamp for unusually
+   narrow desktop windows (true phones use the full-screen rule in the media
+   query at the bottom of this file). */
+.phone{aspect-ratio:390 / 844;height:min(844px, calc(100vh - 24px));width:auto;
+  max-width:calc(100vw - 24px);
   background:#0b0b0d;border:12px solid #0b0b0d;border-radius:52px;
   box-shadow:0 30px 60px -12px rgba(10,30,45,.5), inset 0 0 0 2px #2c2c30;
   overflow:hidden;position:relative;}
@@ -306,3 +313,15 @@ textarea#s-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(18,168
 .to-top:active{transform:scale(.92);}
 
 .hidden{display:none;}
+
+/* ===================== Real mobile view =====================
+   On actual phones, drop the phone-in-phone bezel and let the app fill the
+   screen like a native mobile app. The 100dvh ("dynamic viewport height")
+   accounts for the mobile browser's address bar so nothing gets cut off;
+   100vh is the fallback for older browsers. */
+@media (max-width:480px){
+  body{padding:0;align-items:stretch;}
+  .phone{width:100%;height:100vh;height:100dvh;aspect-ratio:auto;
+    max-width:none;border:0;border-radius:0;box-shadow:none;}
+  .screen{border-radius:0;}
+}

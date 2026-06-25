@@ -25,7 +25,7 @@ publishable/anon key in `script.js` is browser-safe and RLS protects the data).
 Before demoing live, confirm:
 
 - The Supabase project is **active** (free projects pause when idle - open the dashboard to wake it).
-- Supabase Auth **email confirmation is OFF** (so demo sign-ups log in immediately).
+- Supabase Auth **email confirmation is ON** - new sign-ups must click the confirmation link (the branded "Confirm signup" email, delivered via **Mailjet** SMTP) before they can log in. A **Resend it** link on the login screen re-sends it if the first email is slow. For a live demo, sign up a test account *before* presenting, or keep the inbox handy to click the link.
 - Edge Functions `symptom-check` + `find-doctors` are **deployed** with CORS (see Edge Functions Setup).
 - `USE_N8N = false` (default) runs the standalone Supabase path; set `true` only to demo the n8n workflow live.
 
@@ -56,14 +56,14 @@ Two flags at the top of `script.js` switch the whole app:
 
 All docs live in `Audit/Documentation/Workflow Documentation/`:
 
-- [System Overview &amp; Build Log](Audit/Documentation/Workflow Documentation/MDT_25-27_Change Process MGT_System Overview.md) - architecture, data model + RLS, run modes, and the full build history. **Start here.**
-- [Edge Functions Setup](Audit/Documentation/Workflow Documentation/MDT_25-27_Change Process MGT_Edge Functions Setup.md) - deploy `symptom-check` + `find-doctors` (standalone engine).
-- [n8n Consolidation &amp; Cleanup](Audit/Documentation/Workflow Documentation/MDT_25-27_Change Process MGT_n8n Consolidation and Cleanup.md) - the three flows merged into one importable workflow + NULL fixes (n8n engine).
-- [Doctor File Import](Audit/Documentation/Workflow Documentation/MDT_25-27_Change Process MGT_Doctor File Import.md) - `doctors.csv` schema, import steps, RLS SQL.
-- [Doctor Data Architecture](Audit/Documentation/Workflow Documentation/MDT_25-27_Change Process MGT_Doctor Data Architecture.md) - OSM sourcing (Nominatim + Overpass).
-- [ArztAPI Scaffolding](Audit/Documentation/Workflow Documentation/MDT_25-27_Change Process MGT_ArztAPI Scaffolding.md) - inactive future-integration placeholder.
-- [n8n Workflow](Audit/Documentation/Workflow Documentation/MDT_25-27_Change Process MGT_n8n Workflow.md) - the n8n mapping used for the demo.
-- [AI Health Insurance SaaS](Audit/Documentation/Workflow Documentation/MDT_25-27_Change Process MGT_AI Health Insurance SaaS.md) - concept / vision, BPMN, regulatory analysis, and the design reconciled with the delivered build (live vs. partial vs. future).
+- [System Overview &amp; Build Log](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_System%20Overview.md) - architecture, data model + RLS, run modes, and the full build history. **Start here.**
+- [Edge Functions Setup](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_Edge%20Functions%20Setup.md) - deploy `symptom-check` + `find-doctors` (standalone engine).
+- [n8n Consolidation &amp; Cleanup](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_n8n%20Consolidation%20and%20Cleanup.md) - the three flows merged into one importable workflow + NULL fixes (n8n engine).
+- [Doctor File Import](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_Doctor%20File%20Import.md) - `doctors.csv` schema, import steps, RLS SQL.
+- [Doctor Data Architecture](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_Doctor%20Data%20Architecture.md) - OSM sourcing (Nominatim + Overpass).
+- [ArztAPI Scaffolding](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_ArztAPI%20Scaffolding.md) - inactive future-integration placeholder.
+- [n8n Workflow](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_n8n%20Workflow.md) - the n8n mapping used for the demo.
+- [AI Health Insurance SaaS](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_AI%20Health%20Insurance%20SaaS.md) - concept / vision, BPMN, regulatory analysis, and the design reconciled with the delivered build (live vs. partial vs. future).
 
 Workflow exports and SQL are in `Audit/Documentation/Workflow JSON SQL/`.
 

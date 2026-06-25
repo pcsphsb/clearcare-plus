@@ -184,6 +184,8 @@ Deploy steps: see **Edge Functions Setup** in this folder.
 - The app renders inside an iPhone-style black bezel (`.phone`) with the screen (`.screen`) scrolling inside it. Scrollbar is hidden (mobile-style) so content stays centered.
 - Bottom sheets and the confirm modal are anchored inside the phone frame.
 - A floating back-to-top button appears after scrolling.
+- **Fixed phone shape on desktop.** The frame keeps a locked 390:844 shape using CSS `aspect-ratio`. Its height fits the window (up to 844px) and the width follows from the ratio. So on a short or zoomed-in screen the whole phone scales down evenly instead of squishing, and it stays fully visible. At full size it is still the normal 390 x 844.
+- **Real mobile view.** On real phones (screen width 480px or less) a media query removes the bezel, rounded corners, and shadow so the app fills the whole screen like a normal mobile app. It uses `100dvh` (dynamic viewport height) so the phone browser's address bar does not cut off the content. Tablets and desktops still show the framed phone.
 
 ---
 
@@ -203,6 +205,7 @@ Deploy steps: see **Edge Functions Setup** in this folder.
 13. **Doctor data**: parsed `doctors_raw.xlsx`, generated `doctors.csv` (clean headers), imported to Supabase + RLS.
 14. **Standalone vs n8n**: `USE_N8N` / `N8N_PRODUCTION` flags; booking direct-to-Supabase.
 15. **Edge Functions**: `symptom-check` (Groq) and `find-doctors` (OSM) so the app runs without n8n; fixed CORS and Overpass reliability.
+16. **Responsive phone frame**: locked the phone to a 390:844 shape with `aspect-ratio` so it scales down instead of squishing on short or zoomed-in desktop windows; added a real mobile view (480px media query) that drops the bezel and fills the screen with `100dvh`.
 
 ---
 

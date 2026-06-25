@@ -53,11 +53,12 @@ FLOW 1 - SYMPTOM TRIAGE + DOCTOR MATCHING (main flow):
 7. Set node: merge the AI recommendation and the matched doctors into one object.
 8. Respond to Webhook: return recommended_doctor_type, urgency, referral_required, explanation_for_user, and doctors (the matched list).
 
-FLOW 2 - REGISTRATION MIRROR:
+FLOW 2 - REGISTRATION MIRROR (early draft - superseded by FLOW 4; see note under "WORKFLOW A"):
 1. Webhook trigger, POST, path "register-hook". Receives user_id, email, first_name, last_name, language.
 2. Supabase node: UPSERT a row in "profiles" (match on id) with those fields.
 3. Send Email node: a short welcome email to the user's email.
 4. Respond to Webhook: { "status": "ok" }.
+   (Live version instead: Supabase Auth admin generate_link -> Build Confirmation Email -> Send via Mailjet -> Respond. The signup confirmation email goes out via Mailjet.)
 
 FLOW 3 - BOOKING:
 1. Webhook trigger, POST, path "book-appointment". Receives user_id, doctor_id (FK to
@@ -81,6 +82,19 @@ Use one Supabase credential (service_role key) for all Supabase nodes. If a tabl
 ---
 
 ## WORKFLOW A - Registration Process Mirror
+
+> **⚠️ Superseded - kept for planning history.** This early mirror (upsert `profiles`
+> + a generic "welcome email") was an initial design. The **live** registration flow is
+> **FLOW 4** in `Workflow JSON SQL/ClearCare+ Complete Workflow.json`: it mirrors the
+> app's Supabase **Auth** signup and sends the branded **confirmation email** (not a
+> welcome email) via **Mailjet**. To avoid a duplicate email (Mailjet is Supabase's
+> custom SMTP relay, so `/auth/v1/signup` would auto-send), FLOW 4 uses
+> `/auth/v1/admin/generate_link` (creates the user + returns the confirmation link
+> WITHOUT auto-sending) → a Code node that injects the link into the branded template →
+> a **Send via Mailjet** node (Mailjet Send API v3.1). Sender:
+> `ClearCare+ <clearcareplus.de@gmail.com>`. Read FLOW 4 as the source of truth; the
+> profile row is created by Supabase Auth from the signup metadata, so no `profiles`
+> upsert node is needed.
 
 Mirrors the BPMN: *Registration → Database → Confirmation*. The app already signs the
 user up; it then calls this webhook so n8n can run the downstream automation.

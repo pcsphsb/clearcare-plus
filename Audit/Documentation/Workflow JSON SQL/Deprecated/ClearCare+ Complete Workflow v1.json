@@ -607,8 +607,8 @@
     },
     {
       "parameters": {
-        "content": "## FLOW 4: Registration + Email Confirmation & Resend (Mailjet)\nMirrors the app's signup (script.js handleRegister / resendConfirmation), but surfaces the Mailjet email send as its own visible node for the demo.\n\n- **Register**: `Supabase Admin: Generate Link` -> `Build Confirmation Email` -> `Send via Mailjet` -> respond.\n- **Resend**: same chain, regenerating a fresh link for an unconfirmed account.\n\n### Why admin generate_link (not /signup)?\nIn the live app, Mailjet is Supabase's custom SMTP relay, so calling `/auth/v1/signup` makes Supabase AUTO-SEND the confirmation email (invisible to n8n). To show the Mailjet send as an explicit step WITHOUT sending a duplicate, this flow uses `/auth/v1/admin/generate_link` (type=signup): it creates the user and RETURNS the confirmation `action_link` but does NOT auto-send. The `Build Confirmation Email` Code node injects that link into the branded template (SQL/email-template-confirm-signup.html), and `Send via Mailjet` POSTs it to the Mailjet Send API v3.1.\n\n### Setup before running\n1. Replace `YOUR_SUPABASE_SERVICE_ROLE_KEY` (both Generate Link nodes) with the Supabase SERVICE ROLE key. It is a SECRET - server-side only; never ship it in the browser app.\n2. Create an n8n **Basic Auth** credential named \"Mailjet API (key:secret)\": username = Mailjet API Key, password = Mailjet Secret Key.\n3. The `From` address is `ClearCare+ <clearcareplus.de@gmail.com>` (your Mailjet-verified sender). Recipients see it as \"via bnc3.mailjet.com\" until a custom domain/DKIM is set up in Mailjet.\n\nSame email, same template, same outcome as the live app - the mechanic is just made visible here.",
-        "height": 620,
+        "content": "## FLOW 4: Registration + Email Confirmation & Resend\nMirrors the app's Supabase Auth signup (script.js handleRegister / resendConfirmation).\n\n- **Register** calls Supabase Auth `/auth/v1/signup`, passing the profile fields as user metadata and `redirect_to` as the confirmation link target. Supabase then sends the branded \"Confirm signup\" email.\n- **Resend Confirmation** calls Supabase Auth `/auth/v1/resend` (type=signup) to send a fresh confirmation link.\n\nNOTE: the confirmation email is sent and templated by Supabase (Authentication > Emails > Templates), NOT by n8n. n8n only triggers it. The `apikey` header uses the publishable (anon) key.",
+        "height": 536,
         "width": 332,
         "color": 5
       },
@@ -643,17 +643,22 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://ossxctklhsoiiigixuvt.supabase.co/auth/v1/admin/generate_link",
+        "url": "https://ossxctklhsoiiigixuvt.supabase.co/auth/v1/signup",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "redirect_to",
+              "value": "https://pcsphsb.github.io/clearcare-plus/index.html"
+            }
+          ]
+        },
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "apikey",
-              "value": "YOUR_SUPABASE_SERVICE_ROLE_KEY"
-            },
-            {
-              "name": "Authorization",
-              "value": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"
+              "value": "sb_publishable_ivwCyL4ilX00fpvfpIgZtg_hrxl-lbk"
             },
             {
               "name": "Content-Type",
@@ -663,11 +668,11 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"type\": \"signup\",\n  \"email\": \"{{ $json.body.email }}\",\n  \"password\": \"{{ $json.body.password }}\",\n  \"data\": {\n    \"first_name\": \"{{ $json.body.first_name }}\",\n    \"last_name\": \"{{ $json.body.last_name }}\",\n    \"birthdate\": \"{{ $json.body.birthdate }}\",\n    \"language\": \"{{ $json.body.language }}\"\n  },\n  \"redirect_to\": \"https://pcsphsb.github.io/clearcare-plus/index.html\"\n}",
+        "jsonBody": "={\n  \"email\": \"{{ $json.body.email }}\",\n  \"password\": \"{{ $json.body.password }}\",\n  \"data\": {\n    \"first_name\": \"{{ $json.body.first_name }}\",\n    \"last_name\": \"{{ $json.body.last_name }}\",\n    \"birthdate\": \"{{ $json.body.birthdate }}\",\n    \"language\": \"{{ $json.body.language }}\"\n  }\n}",
         "options": {}
       },
       "id": "c025a5e5-7a02-48a1-ab5f-80d63ab7e678",
-      "name": "Supabase Admin: Generate Link",
+      "name": "Supabase Sign Up",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -677,57 +682,8 @@
     },
     {
       "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const d = $json || {};\nconst link = d.action_link || (d.properties && d.properties.action_link) || '';\nconst email = $('Register Webhook').item.json.body.email;\nconst html = `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background:#e8f0f5;margin:0;padding:32px 0;font-family:Arial,Helvetica,sans-serif;'><tr><td align='center'><table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='max-width:480px;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #d9e4ea;'><tr><td style='background:linear-gradient(135deg,#0a6b85,#12a89d);padding:36px 32px;text-align:center;'><h1 style='margin:12px 0 4px;color:#ffffff;font-size:24px;font-weight:700;'>ClearCare+</h1><p style='margin:0;color:#d7f0ec;font-size:13px;'>Clear words, Clear care.</p></td></tr><tr><td style='padding:32px;'><h2 style='margin:0 0 12px;color:#1f2d33;font-size:19px;font-weight:700;'>Confirm your email</h2><p style='margin:0 0 20px;color:#5b7a8a;font-size:15px;line-height:1.6;'>Welcome to ClearCare+. You are one step away from booking care in your own language. Please confirm your email to activate your account.</p><table role='presentation' cellpadding='0' cellspacing='0' style='margin:0 auto 24px;'><tr><td align='center' style='border-radius:14px;background:linear-gradient(135deg,#0a6b85,#12a89d);'><a href='${link}' style='display:inline-block;padding:14px 32px;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:14px;'>Confirm my email</a></td></tr></table><p style='margin:0 0 8px;color:#5b7a8a;font-size:13px;line-height:1.6;'>If the button does not work, copy and paste this link into your browser:</p><p style='margin:0 0 24px;font-size:13px;line-height:1.5;word-break:break-all;'><a href='${link}' style='color:#0a6b85;'>${link}</a></p><p style='margin:0;color:#9bb0bc;font-size:12px;line-height:1.6;border-top:1px solid #e3edf2;padding-top:16px;'>If you did not create a ClearCare+ account, you can safely ignore this email.</p></td></tr><tr><td style='background:#f5f9fc;padding:18px 32px;text-align:center;'><p style='margin:0;color:#9bb0bc;font-size:11px;'>ClearCare+ . Healthcare booking made clear.</p></td></tr></table></td></tr></table>`;\nreturn { json: { to: email, subject: 'Confirm your ClearCare+ email', fromEmail: 'clearcareplus.de@gmail.com', fromName: 'ClearCare+', html } };"
-      },
-      "id": "f1a10001-0001-4aaa-bbbb-buildemailreg01",
-      "name": "Build Confirmation Email",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3200,
-        2768
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.mailjet.com/v3.1/send",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpBasicAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"Messages\": [\n    {\n      \"From\": { \"Email\": \"{{ $json.fromEmail }}\", \"Name\": \"{{ $json.fromName }}\" },\n      \"To\": [ { \"Email\": \"{{ $json.to }}\" } ],\n      \"Subject\": \"{{ $json.subject }}\",\n      \"HTMLPart\": {{ JSON.stringify($json.html) }}\n    }\n  ]\n}",
-        "options": {}
-      },
-      "id": "f1a10002-0002-4aaa-bbbb-mailjetsendreg1",
-      "name": "Send via Mailjet",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        3424,
-        2768
-      ],
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "MAILJET_BASIC_AUTH",
-          "name": "Mailjet API (key:secret)"
-        }
-      }
-    },
-    {
-      "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ { \"status\": \"confirmation_sent\", \"email\": $('Register Webhook').item.json.body.email } }}",
+        "responseBody": "={{ { \"status\": \"confirmation_sent\", \"email\": ($json.email || $json.user?.email || $('Register Webhook').item.json.body.email) } }}",
         "options": {}
       },
       "id": "a4029229-37af-4b2c-9f23-20112de9bb0b",
@@ -735,7 +691,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        3648,
+        3200,
         2768
       ]
     },
@@ -761,17 +717,22 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://ossxctklhsoiiigixuvt.supabase.co/auth/v1/admin/generate_link",
+        "url": "https://ossxctklhsoiiigixuvt.supabase.co/auth/v1/resend",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "redirect_to",
+              "value": "https://pcsphsb.github.io/clearcare-plus/index.html"
+            }
+          ]
+        },
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "apikey",
-              "value": "YOUR_SUPABASE_SERVICE_ROLE_KEY"
-            },
-            {
-              "name": "Authorization",
-              "value": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"
+              "value": "sb_publishable_ivwCyL4ilX00fpvfpIgZtg_hrxl-lbk"
             },
             {
               "name": "Content-Type",
@@ -781,66 +742,17 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"type\": \"signup\",\n  \"email\": \"{{ $json.body.email }}\",\n  \"redirect_to\": \"https://pcsphsb.github.io/clearcare-plus/index.html\"\n}",
+        "jsonBody": "={\n  \"type\": \"signup\",\n  \"email\": \"{{ $json.body.email }}\"\n}",
         "options": {}
       },
       "id": "56ba0a63-f20b-440f-b2ae-aa1a181f1d84",
-      "name": "Supabase Admin: Generate Link (Resend)",
+      "name": "Supabase Resend Confirmation",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         2976,
         2992
       ]
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const d = $json || {};\nconst link = d.action_link || (d.properties && d.properties.action_link) || '';\nconst email = $('Resend Confirmation Webhook').item.json.body.email;\nconst html = `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background:#e8f0f5;margin:0;padding:32px 0;font-family:Arial,Helvetica,sans-serif;'><tr><td align='center'><table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='max-width:480px;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #d9e4ea;'><tr><td style='background:linear-gradient(135deg,#0a6b85,#12a89d);padding:36px 32px;text-align:center;'><h1 style='margin:12px 0 4px;color:#ffffff;font-size:24px;font-weight:700;'>ClearCare+</h1><p style='margin:0;color:#d7f0ec;font-size:13px;'>Clear words, Clear care.</p></td></tr><tr><td style='padding:32px;'><h2 style='margin:0 0 12px;color:#1f2d33;font-size:19px;font-weight:700;'>Confirm your email</h2><p style='margin:0 0 20px;color:#5b7a8a;font-size:15px;line-height:1.6;'>Welcome to ClearCare+. You are one step away from booking care in your own language. Please confirm your email to activate your account.</p><table role='presentation' cellpadding='0' cellspacing='0' style='margin:0 auto 24px;'><tr><td align='center' style='border-radius:14px;background:linear-gradient(135deg,#0a6b85,#12a89d);'><a href='${link}' style='display:inline-block;padding:14px 32px;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:14px;'>Confirm my email</a></td></tr></table><p style='margin:0 0 8px;color:#5b7a8a;font-size:13px;line-height:1.6;'>If the button does not work, copy and paste this link into your browser:</p><p style='margin:0 0 24px;font-size:13px;line-height:1.5;word-break:break-all;'><a href='${link}' style='color:#0a6b85;'>${link}</a></p><p style='margin:0;color:#9bb0bc;font-size:12px;line-height:1.6;border-top:1px solid #e3edf2;padding-top:16px;'>If you did not create a ClearCare+ account, you can safely ignore this email.</p></td></tr><tr><td style='background:#f5f9fc;padding:18px 32px;text-align:center;'><p style='margin:0;color:#9bb0bc;font-size:11px;'>ClearCare+ . Healthcare booking made clear.</p></td></tr></table></td></tr></table>`;\nreturn { json: { to: email, subject: 'Confirm your ClearCare+ email', fromEmail: 'clearcareplus.de@gmail.com', fromName: 'ClearCare+', html } };"
-      },
-      "id": "f1a10003-0003-4aaa-bbbb-buildemailres01",
-      "name": "Build Confirmation Email (Resend)",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3200,
-        2992
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.mailjet.com/v3.1/send",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpBasicAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"Messages\": [\n    {\n      \"From\": { \"Email\": \"{{ $json.fromEmail }}\", \"Name\": \"{{ $json.fromName }}\" },\n      \"To\": [ { \"Email\": \"{{ $json.to }}\" } ],\n      \"Subject\": \"{{ $json.subject }}\",\n      \"HTMLPart\": {{ JSON.stringify($json.html) }}\n    }\n  ]\n}",
-        "options": {}
-      },
-      "id": "f1a10004-0004-4aaa-bbbb-mailjetsendres1",
-      "name": "Send via Mailjet (Resend)",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        3424,
-        2992
-      ],
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "MAILJET_BASIC_AUTH",
-          "name": "Mailjet API (key:secret)"
-        }
-      }
     },
     {
       "parameters": {
@@ -853,7 +765,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        3648,
+        3200,
         2992
       ]
     },
@@ -1074,36 +986,14 @@
       "main": [
         [
           {
-            "node": "Supabase Admin: Generate Link",
+            "node": "Supabase Sign Up",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Supabase Admin: Generate Link": {
-      "main": [
-        [
-          {
-            "node": "Build Confirmation Email",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build Confirmation Email": {
-      "main": [
-        [
-          {
-            "node": "Send via Mailjet",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send via Mailjet": {
+    "Supabase Sign Up": {
       "main": [
         [
           {
@@ -1118,36 +1008,14 @@
       "main": [
         [
           {
-            "node": "Supabase Admin: Generate Link (Resend)",
+            "node": "Supabase Resend Confirmation",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Supabase Admin: Generate Link (Resend)": {
-      "main": [
-        [
-          {
-            "node": "Build Confirmation Email (Resend)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build Confirmation Email (Resend)": {
-      "main": [
-        [
-          {
-            "node": "Send via Mailjet (Resend)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send via Mailjet (Resend)": {
+    "Supabase Resend Confirmation": {
       "main": [
         [
           {

@@ -46,9 +46,21 @@ app actually works, so it is intentionally not done that way.
   can call it.
 - **Archived** the obsolete `translate-note` workflow (the in-app translation
   feature was removed) to `Workflow JSON SQL/Deprecated/`.
-- **Removed the email nodes** (booking confirmation / welcome email). The project
-  has no SMTP backend, and the app never sends mail - booking confirmation is shown
-  in the UI from the saved Supabase row. So no email credentials are needed.
+- **Removed the old booking/welcome email nodes** (the original SMTP-less drafts).
+  Booking confirmation is still shown in the UI from the saved Supabase row - no
+  email is sent for bookings.
+
+> **Update (registration email confirmation):** the app now DOES send mail for one
+> thing - the signup confirmation email. In the live app this goes out via Supabase
+> Auth using **Mailjet as the custom SMTP relay** (a dashboard setting; no Mailjet
+> code). FLOW 4 in `ClearCare+ Complete Workflow.json` mirrors this for the demo, but
+> surfaces the Mailjet send as its own visible node: `Supabase Admin: Generate Link`
+> (creates the user + returns the confirmation link WITHOUT auto-sending) ->
+> `Build Confirmation Email` (injects the link into the branded template) ->
+> `Send via Mailjet` (POSTs to the Mailjet Send API v3.1). `generate_link` is used
+> instead of `/auth/v1/signup` precisely so the explicit Mailjet node does not produce
+> a duplicate email. Requires the Supabase **service-role** key (server-side only) and
+> a Mailjet Basic Auth credential. Sender: `ClearCare+ <clearcareplus.de@gmail.com>`.
 
 ## 3. NULL-field fixes (the main correction)
 Two Supabase insert nodes were writing NULLs because their field expressions

@@ -204,7 +204,7 @@ The following maps each element of the standard BPMN flow to its **responsible p
 | **User Task**               | Doctor selection                           | User                | ✅ Live - one-tap selection from the pre-filtered list (`doctors.html`).                                                                                                                                            |
 | **Service Task**            | Appointment booking                        | AI + System         | ✅ Live - writes to the `appointments` table (direct Supabase or n8n). **No AI voice call** - the `ArztAPI` paid-booking path is a `false` scaffold.                                                      |
 | **Gateway (XOR)**           | Booking successful?                        | System              | ✅ Live - 0-row writes are surfaced (no false "saved"); closed-day/invalid slots rejected with a clear message.                                                                                                       |
-| **Service Task**            | Confirmation & prep notification           | AI + System         | 🟡 In-app confirmation is read back from the saved row (live).**No outbound email is sent** and no multilingual prep message; doctors without hours get an `mailto:` draft to the **user's own** inbox. |
+| **Service Task**            | Confirmation & prep notification           | AI + System         | 🟡 In-app confirmation is read back from the saved row (live).**No booking email is sent** and no multilingual prep message; doctors without hours get an `mailto:` draft to the **user's own** inbox. (The only outbound email in the system is the signup confirmation - via Mailjet, see FLOW 4.) |
 | **Intermediate Event**      | Appointment day reminder                   | System timer        | 🔵 Future - no 24h reminder/scheduler built.                                                                                                                                                                          |
 | **Service Task**            | Post-appointment follow-up                 | AI                  | 🟡**Reschedule and Cancel are live** (with audit logs); prescription logging, referral chaining, and feedback collection are future scope.                                                                      |
 | **End Event**               | Care cycle complete                        | System              | ✅ Live - booking persisted; cancellations/reschedules archived to audit tables.                                                                                                                                      |
@@ -223,7 +223,7 @@ An AI-first health platform operating in Germany sits at the intersection of two
 | Component                  | Governing regime                                  | Risk level     | Burden                                           |
 | -------------------------- | ------------------------------------------------- | -------------- | ------------------------------------------------ |
 | Doctor matching            | EU AI Act (limited risk)                          | Low            | Transparency labels                              |
-| Automated booking          | GDPR (Art. 22)                                    | Low–Medium    | Consent + optional human override                |
+| Automated booking          | GDPR (Art. 22)                                    | Low-Medium    | Consent + optional human override                |
 | Insurance/policy explainer | GDPR                                              | Medium         | Consent, output accuracy                         |
 | **Symptom triage**   | **EU AI Act (potentially high-risk) + MDR** | **High** | **Conformity assessment, human oversight** |
 | All health data handling   | GDPR (Art. 9) + DPIA                              | High           | Explicit consent, DPIA, data minimization        |
@@ -321,7 +321,7 @@ Each BPMN step from Section 8 maps to a specific type of n8n node:
 | Doctor selection               | Front-end list response                                       | ✅ User taps from the pre-filtered list.                                                             |
 | Appointment booking            | **Supabase / HTTP Request** node                        | ✅ Writes to `appointments`. (No clinic scheduling API - that's ArztAPI future scope.)             |
 | Booking successful?            | **IF** node                                             | ✅ Success/failure handled; closed-day slots rejected.                                               |
-| Confirmation & prep            | In-app (saved row)                                            | 🟡 Confirmation shown from the saved row;**email/SMTP nodes were removed** (no outbound mail). |
+| Confirmation & prep            | In-app (saved row)                                            | 🟡 Booking confirmation shown from the saved row;**no booking email**. The only outbound email is the signup confirmation, sent via **Mailjet** in FLOW 4. |
 | Appointment reminder           | **Schedule Trigger** / **Wait** node              | 🔵 Future - no 24h reminder built.                                                                   |
 | Post-appointment follow-up     | **AI Agent** + **Postgres**                       | 🟡 Reschedule/cancel live (with audit tables); prescription/feedback future.                         |
 
@@ -366,13 +366,13 @@ Each BPMN step from Section 8 maps to a specific type of n8n node:
 - **It makes the AI-first claim tangible.** Every AI Agent / LLM Chain node *is* an AI-responsible step from your BPMN - you can literally point at them.
 - **It shows the human-in-the-loop safeguard as a real node** (Send and Wait for Response), not just a policy promise - directly addressing the GDPR Art. 22 requirement.
 - **It mirrors your BPMN diagram**, so your process map and your build approach tell the same story.
-- **It's demo-able.** For a class, you could build a stripped-down version of even 3–4 nodes to show the concept working live.
+- **It's demo-able.** For a class, you could build a stripped-down version of even 3-4 nodes to show the concept working live.
 
 ### 10.5 Build Phases
 
 | Phase               | Goal                             | n8n Scope                                   | Status (as delivered)                                                                                                                     |
 | ------------------- | -------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. Proof of Concept | Show triage → matching works    | 3–4 nodes, mock data                       | ✅**Done** - and surpassed (mock data replaced with real imported doctors).                                                         |
+| 1. Proof of Concept | Show triage → matching works    | 3-4 nodes, mock data                       | ✅**Done** - and surpassed (mock data replaced with real imported doctors).                                                         |
 | 2. Prototype        | Full flow with real APIs         | All nodes, test insurer/clinic APIs         | ✅**Done** - full flow live on real Groq + OSM; insurer/clinic APIs still 🔵.                                                       |
 | 3. Pilot            | Connect a real front-end         | n8n as backend via webhook; UI calls it     | ✅**Done** - a real static front-end calls the backend (standalone *and* n8n).                                                    |
 | 4. Scale            | Migrate hot paths to custom code | Keep n8n for orchestration, harden the rest | 🟡**Partial** - the standalone Supabase + Edge Function path *is* the hardened twin of n8n; production hosting/scaling is future. |
@@ -702,7 +702,7 @@ What the system *produces* (the deliverable outputs):
 
 - **On-screen (live):** language-appropriate recommendation, urgency badge, doctor shortlist, in-app appointment confirmation. (*Spoken output is future VUI scope.*)
 - **Stored data (live):** `profiles`, `consultations`, `appointments`, plus the invisible `appointments_cancel` / `appointments_reschedule` audit logs.
-- **External output:** **none sent in the prototype** - confirmation is shown in-app from the saved row; for doctors without opening hours, an email *draft* is opened to the **user's own** inbox. A real confirmation email and an Outlook calendar event are future scope.
+- **External output:** **one email is sent** - the **signup confirmation email** (Supabase Auth, delivered via **Mailjet** SMTP; surfaced as an explicit Mailjet node in FLOW 4 of the n8n workflow). **Booking** confirmation is still shown **in-app** from the saved row (no booking email); for doctors without opening hours, an email *draft* is opened to the **user's own** inbox. A booking confirmation email and an Outlook calendar event remain future scope.
 - **Structured data (live):** the AI's JSON output (Section 10.9), which is both a system message *and* an audit artifact in `consultations`.
 
 ---
@@ -724,5 +724,5 @@ What the system *produces* (the deliverable outputs):
 
 ---
 
-*MDT 25–27 | Change and Process Management Project*
-*Draft v3 - Sections 8–12 reconciled with the delivered GitHub build (live vs. partial vs. future). For the full technical build log, see the [System Overview](MDT_25-27_Change Process MGT_System Overview.md).*
+*MDT 25-27 | Change and Process Management Project*
+*Draft v3 - Sections 8-12 reconciled with the delivered GitHub build (live vs. partial vs. future). For the full technical build log, see the [System Overview](MDT_25-27_Change Process MGT_System Overview.md).*
