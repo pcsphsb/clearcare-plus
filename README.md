@@ -47,6 +47,8 @@ Before demoing live, confirm:
 
 For Reference (N8N Workflow): [ClearCare+ Complete Workflow](https://pcsphsb.app.n8n.cloud/workflow/xh69iloQa5EHgLke)
 
+> Note: that link is the team's **private n8n Cloud workspace**, so it opens only for an account with access (clicking it as a guest just shows a login). To view and run the workflow yourself, import the exported file [`Audit/Documentation/Workflow JSON SQL/ClearCare+ Complete Workflow.json`](Audit/Documentation/Workflow%20JSON%20SQL/ClearCare%2B%20Complete%20Workflow.json) into your own n8n (Workflows → Import from File). See the n8n Consolidation &amp; Cleanup doc for credential re-linking.
+
 Two flags at the top of `script.js` switch the whole app:
 
 - `USE_N8N` - `false` (default): booking writes directly to Supabase; the Symptom Checker and the doctor OSM fallback use Supabase **Edge Functions**. `true`: all three route through **n8n** for a live workflow demo.
@@ -64,9 +66,9 @@ All docs live in `Audit/Documentation/Workflow Documentation/`:
 - [ArztAPI Scaffolding](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_ArztAPI%20Scaffolding.md) - inactive future-integration placeholder.
 - [n8n Workflow](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_n8n%20Workflow.md) - the n8n mapping used for the demo.
 - [AI Health Insurance SaaS](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_AI%20Health%20Insurance%20SaaS.md) - concept / vision, BPMN, regulatory analysis, and the design reconciled with the delivered build (live vs. partial vs. future).
+- [UI Prototyping](Audit/Documentation/Workflow%20Documentation/MDT_25-27_Change%20Process%20MGT_UI%20Prototyping.md) - the UI v1 wireframe, the AI-assisted design iterations and prompts, and how the prototype maps to the built pages.
 
 Workflow exports and SQL are in `Audit/Documentation/Workflow JSON SQL/`.
-
 
 ## Future Sprints
 
@@ -77,5 +79,5 @@ Should the students have the opportunity to put this application in real product
 - **End-to-End Communication from User to Doctor via the App (as a third-party):** This requries a dedicated API for connecting the app to the doctor's private calendars, further more, stricter legal architecture to handle private, personal, and medical sensitive data.
 - **UI Interface improvement:** Currently, the core feature and supporting feature sare directly present in the UI. In the future, other integrations can be included such as prescription recording, or a small calendar widget that highlights which dates ar emarked based.
 - **From Mobile to Web Design Expansion:** The UI is designed with a mobile-facing interface at first in order to narrow the necessary features and avoid overengineering the current processes as well as avoiding adding unnecessary buttons/widgets/features to fill the empty space that a web would present (due to bigger screen size).
-- **Legal Architecture:** Currently, Terms and Privacy policy look like links but are non-fucntional, it does not show anything. It is important for the students to also consider udnerstanding the legal implications fo using the current tech architecture as well as datasets being used, how data was collected, and how ti will be processed.
+- **Legal Architecture:** Currently, Terms and Privacy policy look like links but are non-fucntional, it does not show anything. It is important for the students to also consider understanding the legal implications fo using the current tech architecture as well as datasets being used, how data was collected, and how it will be processed.
 - **Cybersecurity layer:** Currently, basic cybersecurity measures are added such as using dedicated auth features to store user registration and having IDs properly hashed and unidentifiable while passwords are completely inaccessible. In the future, other measures should be considered such as 2FA for logins, stricter password policies (12 Letters Minimum, with Numbers and Symbols), and also adding anti-bot captchas and verification. This requires a proper hosting process which is not implemented as it is not a target priority for a demo presentation.
