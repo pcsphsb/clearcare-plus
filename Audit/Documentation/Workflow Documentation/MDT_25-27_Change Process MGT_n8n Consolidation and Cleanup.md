@@ -92,6 +92,12 @@ pointed at the wrong place:
 1. n8n -> Workflows -> Import from File -> `ClearCare+ Complete Workflow.json`.
 2. Re-link credentials if prompted (the **Supabase account** and **Groq account**
    nodes) - n8n maps them by name when they already exist.
+
+> **Secrets redacted.** The committed JSON carries no live keys. The Supabase
+> service-role key is replaced by the placeholder `YOUR_SUPABASE_SERVICE_ROLE_KEY`,
+> and credential references hold no key material (n8n stores those in its own
+> encrypted credential store, not in the export). Provide your own keys via n8n
+> **Credentials**, and replace any `YOUR_*` placeholder values, before activating.
 3. Confirm each Webhook node still has CORS = `*` and Respond = "Using Respond to
    Webhook node".
 4. **Activate** the workflow (production URLs, hands-free) OR leave it inactive and

@@ -45,9 +45,11 @@ Before demoing live, confirm:
 
 ## Run modes (standalone vs n8n)
 
-For Reference (N8N Workflow): [ClearCare+ Complete Workflow](https://pcsphsb.app.n8n.cloud/workflow/xh69iloQa5EHgLke)
+For Reference (N8N Workflow): [ClearCare+ Complete Workflow](https://pcsphsb.app.n8n.cloud/workflow/UoiEjg9Vsxotymhi)
 
 > Note: that link is the team's **private n8n Cloud workspace**, so it opens only for an account with access (clicking it as a guest just shows a login). To view and run the workflow yourself, import the exported file [`Audit/Documentation/Workflow JSON SQL/ClearCare+ Complete Workflow.json`](Audit/Documentation/Workflow%20JSON%20SQL/ClearCare%2B%20Complete%20Workflow.json) into your own n8n (Workflows → Import from File). See the n8n Consolidation &amp; Cleanup doc for credential re-linking.
+
+> **Secrets redacted.** The exported JSON contains no live keys: the Supabase service-role key appears only as the placeholder `YOUR_SUPABASE_SERVICE_ROLE_KEY`, and node credentials hold no key material (n8n keeps those in its own encrypted store). Supply your own keys via n8n **Credentials** after import.
 
 Two flags at the top of `script.js` switch the whole app:
 

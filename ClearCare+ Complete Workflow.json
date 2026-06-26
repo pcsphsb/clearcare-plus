@@ -1,5 +1,5 @@
 {
-  "name": "ClearCare+ Complete Workflow",
+  "name": "ClearCare+ Complete Workflow Final",
   "nodes": [
     {
       "parameters": {
@@ -9,13 +9,13 @@
           "systemMessage": "You are the triage assistant for ClearCare+, a health-insurance navigation app for immigrants in Germany. You help users reach the RIGHT TYPE of doctor. You are a navigator, NOT a diagnostician.\n\nRULES:\n1. Recommend ONE doctor type only (e.g. General Practitioner, Dermatologist, Cardiologist, ENT, Orthopedist, Gynecologist, Pediatrician, Psychiatrist, Ophthalmologist, Dentist, Urologist, Gastroenterologist).\n2. NEVER name a disease, diagnosis, or treatment. If asked what is wrong, say you only help find the right doctor.\n3. \"urgency\" is EXACTLY one of: routine, soon, emergency.\n4. EMERGENCY OVERRIDE: if symptoms include red flags (chest pain, difficulty breathing, stroke signs, severe bleeding, fainting, suicidal thoughts, severe allergic reaction) set urgency=emergency, needs_human_review=true, recommended_doctor_type=\"Emergency (call 112)\", and tell the user to call 112 now.\n5. GERMAN REFERRAL RULE: specialists need a GP referral first. Set referral_required=true for a specialist; false for General Practitioner or Emergency.\n6. Write \"explanation_for_user\" in the user's language. Warm, simple, 1-2 sentences, no jargon.\n7. If symptoms are vague, default to General Practitioner. Prefer \"soon\" over \"routine\" if symptoms are painful, worsening, or persistent."
         }
       },
-      "id": "1fde92dc-a9f1-42a8-a11b-ee26745f259f",
+      "id": "61db9197-52e2-4351-a1a9-310a7c83a2f5",
       "name": "Medical Triage Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        3200,
-        1600
+        -432,
+        1680
       ]
     },
     {
@@ -29,10 +29,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        3200,
-        1792
+        -432,
+        1872
       ],
-      "id": "b2faedb7-318b-4360-bfed-8747985f8092",
+      "id": "3f437dca-2837-4f59-a907-362628619ae0",
       "name": "Groq Chat Model",
       "credentials": {
         "groqApi": {
@@ -50,13 +50,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "204af312-7b9e-4554-8486-76125eda74fc",
+      "id": "c5505963-7b71-40f9-bd80-63dd2075b66e",
       "name": "Symptom Check Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        2752,
-        1600
+        -880,
+        1680
       ],
       "webhookId": "cdd4927b-d331-4bb5-b1bd-0e809527ebd6"
     },
@@ -73,13 +73,13 @@
           ]
         }
       },
-      "id": "01647755-cf9b-4ef6-991e-709b9d08dad6",
+      "id": "f06a4a06-ada3-4a6b-9765-2c5c9d6b1d13",
       "name": "Load User Profile",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        2976,
-        1600
+        -656,
+        1680
       ],
       "credentials": {
         "supabaseApi": {
@@ -120,13 +120,13 @@
           "renameFallbackOutput": "Continue"
         }
       },
-      "id": "2d10c614-2063-4d10-85de-89fcf429de74",
+      "id": "9255659d-efa4-4377-98ef-44e19ac970e2",
       "name": "Route by Urgency",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        4000,
-        1600
+        368,
+        1680
       ]
     },
     {
@@ -167,26 +167,26 @@
         },
         "options": {}
       },
-      "id": "16cdd3f2-9ea9-4edc-a370-9703726e23a9",
+      "id": "422539c4-2589-450f-a709-7c5d7030b4fc",
       "name": "Emergency Message",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4224,
-        1504
+        592,
+        1584
       ]
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "fd9257da-391a-4f77-9a15-e2111f397344",
+      "id": "6c3f0e65-ec9e-4076-b495-cf5b99bf6d8b",
       "name": "Respond Emergency",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        4448,
-        1504
+        816,
+        1584
       ]
     },
     {
@@ -225,13 +225,13 @@
           ]
         }
       },
-      "id": "3dc85957-3735-43f3-8aa8-765aec3f4553",
+      "id": "6dff39e6-5d1b-42a6-9687-7e8c4f7e1437",
       "name": "Save Consultation",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        4224,
-        1696
+        592,
+        1776
       ],
       "credentials": {
         "supabaseApi": {
@@ -261,13 +261,13 @@
           ]
         }
       },
-      "id": "d7df825f-323e-4db5-b977-d537e9488747",
+      "id": "58306876-1f7b-4d96-a4f0-658004f14a35",
       "name": "Find Matching Doctors",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        4448,
-        1696
+        816,
+        1776
       ],
       "alwaysOutputData": true,
       "executeOnce": true,
@@ -316,26 +316,26 @@
         },
         "options": {}
       },
-      "id": "c29522d5-5a1d-4444-97d1-893cb78e786c",
+      "id": "9d5e03c4-3536-44e9-ae9c-debdf00614af",
       "name": "Merge Response",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4672,
-        1696
+        1040,
+        1776
       ]
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "441ab374-d95e-49cc-8471-20c5eae1aaf4",
+      "id": "b820bcc6-2373-4799-ba76-6fab48bbb41b",
       "name": "Respond Success",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        4896,
-        1696
+        1264,
+        1776
       ]
     },
     {
@@ -345,13 +345,13 @@
         "width": 336,
         "color": 2
       },
-      "id": "1bcac819-a0c7-4d1a-8e7b-b1aec8a77de6",
+      "id": "1db0e270-22f0-4690-ab90-fcac35d84cef",
       "name": "Sticky Note 1ac11208",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2336,
-        1536
+        -1296,
+        1616
       ]
     },
     {
@@ -361,13 +361,13 @@
         "width": 336,
         "color": 3
       },
-      "id": "e27a0879-5b65-4401-90be-911f59ef83f1",
+      "id": "a5ddcfd7-8b69-4873-8e81-d252fc9ae032",
       "name": "Sticky Note 0ee0e56d",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2336,
-        1984
+        -1296,
+        2064
       ]
     },
     {
@@ -378,10 +378,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3552,
-        1600
+        -80,
+        1680
       ],
-      "id": "276b89de-3451-4b97-a83f-a4698ec26ee0",
+      "id": "2c6da60d-3b57-46e8-9891-71416bce085c",
       "name": "Code in JavaScript"
     },
     {
@@ -391,10 +391,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        3776,
-        1600
+        144,
+        1680
       ],
-      "id": "d799fa86-7662-4c61-8ff3-820bfdfdc560",
+      "id": "47cef1ad-eea8-4acd-ab63-f2e77ae5e105",
       "name": "Respond to Webhook"
     },
     {
@@ -406,13 +406,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "9d89ee77-fa04-489c-b56b-61b9aa5988ea",
+      "id": "a518e567-634f-455d-9810-85f29abd8eb1",
       "name": "Find Doctors Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        2752,
-        2064
+        -880,
+        2144
       ],
       "webhookId": "fd-webhook-uuid-001"
     },
@@ -451,13 +451,13 @@
         },
         "options": {}
       },
-      "id": "ebb65764-4cda-46c2-831c-9d7402b28788",
+      "id": "4c008421-ab1b-4511-affc-ad2e39918edd",
       "name": "Geocode (Nominatim)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2976,
-        2064
+        -656,
+        2144
       ]
     },
     {
@@ -476,26 +476,26 @@
         },
         "options": {}
       },
-      "id": "41b577a1-91a0-4b5e-b392-87289f29a195",
+      "id": "742d7f34-ec62-4dae-b554-779b2646d9a3",
       "name": "Overpass (Find Doctors)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3200,
-        2064
+        -432,
+        2144
       ]
     },
     {
       "parameters": {
         "jsCode": "const resp = $input.first().json;\nconst els = resp.elements || [];\nconst MAP = { general:\"General Practitioner\", dermatology:\"Dermatologist\", cardiology:\"Cardiologist\", paediatrics:\"Pediatrician\", gynaecology:\"Gynecologist\", orthopaedics:\"Orthopedist\", psychiatry:\"Psychiatrist\", ophthalmology:\"Ophthalmologist\", otolaryngology:\"ENT\" };\nreturn els.filter(e => e.tags && e.tags.name).map(e => {\n  const t = e.tags;\n  const s = (t[\"healthcare:speciality\"] || \"\").split(\";\")[0].trim().toLowerCase();\n  return { json: {\n    osm_id: \"osm-\" + e.id,\n    name: t.name,\n    specialty: MAP[s] || (s || \"General Practitioner\"),\n    languages: t[\"language\"] || \"\",\n    street: [t[\"addr:street\"], t[\"addr:housenumber\"]].filter(Boolean).join(\" \"),\n    postcode: t[\"addr:postcode\"] || \"\",\n    city: t[\"addr:city\"] || \"\",\n    lat: e.lat, lon: e.lon,\n    phone: t.phone || t[\"contact:phone\"] || \"\",\n    website: t.website || t[\"contact:website\"] || \"\",\n    source: \"OSM\"\n  } };\n});"
       },
-      "id": "f2cad0e9-84f5-4985-b9ae-59c226930955",
+      "id": "ba62865e-f38e-4f0d-b251-e638cbc05407",
       "name": "Normalize Doctors",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3424,
-        2064
+        -208,
+        2144
       ]
     },
     {
@@ -503,13 +503,13 @@
         "respondWith": "allIncomingItems",
         "options": {}
       },
-      "id": "a77eb6cb-631f-4dfc-9df1-2fcd98d30cf9",
+      "id": "8a772a36-350e-44b6-a911-f9f772e4ba62",
       "name": "Respond Doctors",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        3648,
-        2064
+        16,
+        2144
       ]
     },
     {
@@ -540,13 +540,13 @@
           ]
         }
       },
-      "id": "2b7f785c-2f66-4d65-88e0-5525b3d8c47e",
+      "id": "4a74be20-89d0-49e9-a616-f07e60b6e864",
       "name": "Create Appointment1",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        2976,
-        2384
+        -656,
+        2464
       ],
       "credentials": {
         "supabaseApi": {
@@ -561,13 +561,13 @@
         "responseBody": "={{ { \"status\": \"confirmed\" } }}",
         "options": {}
       },
-      "id": "7cad5284-4d34-469c-8d23-17cdc4b5befd",
+      "id": "c4cd00e1-f2f9-4a91-abc7-8c20e1c3d861",
       "name": "Respond Booking1",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        3200,
-        2384
+        -432,
+        2464
       ]
     },
     {
@@ -577,13 +577,13 @@
         "width": 336,
         "color": 4
       },
-      "id": "cbe0040b-31fc-4d02-8ff2-c5523efd1144",
+      "id": "7e7e2efb-25d2-41ac-85a9-667a76cda196",
       "name": "Sticky Note a84fa8de1",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2336,
-        2336
+        -1296,
+        2416
       ]
     },
     {
@@ -595,13 +595,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "6b08e547-2051-4a35-b38d-89aeb87fdb26",
+      "id": "7d69d304-00e3-461d-9b21-e40fef1426c5",
       "name": "Booking Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        2752,
-        2384
+        -880,
+        2464
       ],
       "webhookId": "fc581d3f-604e-454f-a92f-316da3d3cdcf"
     },
@@ -612,13 +612,13 @@
         "width": 332,
         "color": 5
       },
-      "id": "422af8b6-16d0-46ab-bb8d-b38f680a46de",
+      "id": "be6e4219-08a1-415f-a340-81cc1aa7bf05",
       "name": "Sticky Note Flow4",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2336,
-        2672
+        -1296,
+        2752
       ]
     },
     {
@@ -630,13 +630,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "4df16b67-86a9-4495-ae85-c5ffe830abdf",
+      "id": "53a474a9-0c2d-4bbb-9611-db68d646f1e0",
       "name": "Register Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        2752,
-        2768
+        -880,
+        2848
       ],
       "webhookId": "a1b2c3d4-0001-4aaa-bbbb-registerhook01"
     },
@@ -644,6 +644,8 @@
       "parameters": {
         "method": "POST",
         "url": "https://ossxctklhsoiiigixuvt.supabase.co/auth/v1/admin/generate_link",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -653,7 +655,7 @@
             },
             {
               "name": "Authorization",
-              "value": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"
+              "value": "YOUR_SUPABASE_SERVICE_ROLE_KEY"
             },
             {
               "name": "Content-Type",
@@ -666,27 +668,33 @@
         "jsonBody": "={\n  \"type\": \"signup\",\n  \"email\": \"{{ $json.body.email }}\",\n  \"password\": \"{{ $json.body.password }}\",\n  \"data\": {\n    \"first_name\": \"{{ $json.body.first_name }}\",\n    \"last_name\": \"{{ $json.body.last_name }}\",\n    \"birthdate\": \"{{ $json.body.birthdate }}\",\n    \"language\": \"{{ $json.body.language }}\"\n  },\n  \"redirect_to\": \"https://pcsphsb.github.io/clearcare-plus/index.html\"\n}",
         "options": {}
       },
-      "id": "c025a5e5-7a02-48a1-ab5f-80d63ab7e678",
+      "id": "8d02ed0e-91c5-4eb1-b7bb-b7cc4b7e68e7",
       "name": "Supabase Admin: Generate Link",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2976,
-        2768
-      ]
+        -656,
+        2848
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "poX0seROewnVCwiC",
+          "name": "Unnamed credential"
+        }
+      }
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
         "jsCode": "const d = $json || {};\nconst link = d.action_link || (d.properties && d.properties.action_link) || '';\nconst email = $('Register Webhook').item.json.body.email;\nconst html = `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background:#e8f0f5;margin:0;padding:32px 0;font-family:Arial,Helvetica,sans-serif;'><tr><td align='center'><table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='max-width:480px;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #d9e4ea;'><tr><td style='background:linear-gradient(135deg,#0a6b85,#12a89d);padding:36px 32px;text-align:center;'><h1 style='margin:12px 0 4px;color:#ffffff;font-size:24px;font-weight:700;'>ClearCare+</h1><p style='margin:0;color:#d7f0ec;font-size:13px;'>Clear words, Clear care.</p></td></tr><tr><td style='padding:32px;'><h2 style='margin:0 0 12px;color:#1f2d33;font-size:19px;font-weight:700;'>Confirm your email</h2><p style='margin:0 0 20px;color:#5b7a8a;font-size:15px;line-height:1.6;'>Welcome to ClearCare+. You are one step away from booking care in your own language. Please confirm your email to activate your account.</p><table role='presentation' cellpadding='0' cellspacing='0' style='margin:0 auto 24px;'><tr><td align='center' style='border-radius:14px;background:linear-gradient(135deg,#0a6b85,#12a89d);'><a href='${link}' style='display:inline-block;padding:14px 32px;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:14px;'>Confirm my email</a></td></tr></table><p style='margin:0 0 8px;color:#5b7a8a;font-size:13px;line-height:1.6;'>If the button does not work, copy and paste this link into your browser:</p><p style='margin:0 0 24px;font-size:13px;line-height:1.5;word-break:break-all;'><a href='${link}' style='color:#0a6b85;'>${link}</a></p><p style='margin:0;color:#9bb0bc;font-size:12px;line-height:1.6;border-top:1px solid #e3edf2;padding-top:16px;'>If you did not create a ClearCare+ account, you can safely ignore this email.</p></td></tr><tr><td style='background:#f5f9fc;padding:18px 32px;text-align:center;'><p style='margin:0;color:#9bb0bc;font-size:11px;'>ClearCare+ . Healthcare booking made clear.</p></td></tr></table></td></tr></table>`;\nreturn { json: { to: email, subject: 'Confirm your ClearCare+ email', fromEmail: 'clearcareplus.de@gmail.com', fromName: 'ClearCare+', html } };"
       },
-      "id": "f1a10001-0001-4aaa-bbbb-buildemailreg01",
+      "id": "0169be55-6b6e-4492-be3a-d42c530ff0f6",
       "name": "Build Confirmation Email",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3200,
-        2768
+        -432,
+        2848
       ]
     },
     {
@@ -709,18 +717,18 @@
         "jsonBody": "={\n  \"Messages\": [\n    {\n      \"From\": { \"Email\": \"{{ $json.fromEmail }}\", \"Name\": \"{{ $json.fromName }}\" },\n      \"To\": [ { \"Email\": \"{{ $json.to }}\" } ],\n      \"Subject\": \"{{ $json.subject }}\",\n      \"HTMLPart\": {{ JSON.stringify($json.html) }}\n    }\n  ]\n}",
         "options": {}
       },
-      "id": "f1a10002-0002-4aaa-bbbb-mailjetsendreg1",
+      "id": "381defb7-7c63-477d-9f1a-ef8cf8317ef6",
       "name": "Send via Mailjet",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3424,
-        2768
+        -208,
+        2848
       ],
       "credentials": {
         "httpBasicAuth": {
-          "id": "MAILJET_BASIC_AUTH",
-          "name": "Mailjet API (key:secret)"
+          "id": "poX0seROewnVCwiC",
+          "name": "Unnamed credential"
         }
       }
     },
@@ -730,13 +738,13 @@
         "responseBody": "={{ { \"status\": \"confirmation_sent\", \"email\": $('Register Webhook').item.json.body.email } }}",
         "options": {}
       },
-      "id": "a4029229-37af-4b2c-9f23-20112de9bb0b",
+      "id": "75195777-4d9e-47a8-a654-b0d04eac81c7",
       "name": "Respond Registration",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        3648,
-        2768
+        16,
+        2848
       ]
     },
     {
@@ -748,13 +756,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "8e70b316-61d1-491e-85bf-f558ec0209c8",
+      "id": "c6867ab1-ac20-47ac-9252-82d01431974c",
       "name": "Resend Confirmation Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        2752,
-        2992
+        -880,
+        3072
       ],
       "webhookId": "a1b2c3d4-0002-4aaa-bbbb-resendhook002"
     },
@@ -771,7 +779,7 @@
             },
             {
               "name": "Authorization",
-              "value": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"
+              "value": "YOUR_SUPABASE_SERVICE_ROLE_KEY"
             },
             {
               "name": "Content-Type",
@@ -784,13 +792,13 @@
         "jsonBody": "={\n  \"type\": \"signup\",\n  \"email\": \"{{ $json.body.email }}\",\n  \"redirect_to\": \"https://pcsphsb.github.io/clearcare-plus/index.html\"\n}",
         "options": {}
       },
-      "id": "56ba0a63-f20b-440f-b2ae-aa1a181f1d84",
+      "id": "0fe2cced-ed45-48ea-80f8-ef5f3c626c77",
       "name": "Supabase Admin: Generate Link (Resend)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2976,
-        2992
+        -656,
+        3072
       ]
     },
     {
@@ -798,13 +806,13 @@
         "mode": "runOnceForEachItem",
         "jsCode": "const d = $json || {};\nconst link = d.action_link || (d.properties && d.properties.action_link) || '';\nconst email = $('Resend Confirmation Webhook').item.json.body.email;\nconst html = `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background:#e8f0f5;margin:0;padding:32px 0;font-family:Arial,Helvetica,sans-serif;'><tr><td align='center'><table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='max-width:480px;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #d9e4ea;'><tr><td style='background:linear-gradient(135deg,#0a6b85,#12a89d);padding:36px 32px;text-align:center;'><h1 style='margin:12px 0 4px;color:#ffffff;font-size:24px;font-weight:700;'>ClearCare+</h1><p style='margin:0;color:#d7f0ec;font-size:13px;'>Clear words, Clear care.</p></td></tr><tr><td style='padding:32px;'><h2 style='margin:0 0 12px;color:#1f2d33;font-size:19px;font-weight:700;'>Confirm your email</h2><p style='margin:0 0 20px;color:#5b7a8a;font-size:15px;line-height:1.6;'>Welcome to ClearCare+. You are one step away from booking care in your own language. Please confirm your email to activate your account.</p><table role='presentation' cellpadding='0' cellspacing='0' style='margin:0 auto 24px;'><tr><td align='center' style='border-radius:14px;background:linear-gradient(135deg,#0a6b85,#12a89d);'><a href='${link}' style='display:inline-block;padding:14px 32px;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:14px;'>Confirm my email</a></td></tr></table><p style='margin:0 0 8px;color:#5b7a8a;font-size:13px;line-height:1.6;'>If the button does not work, copy and paste this link into your browser:</p><p style='margin:0 0 24px;font-size:13px;line-height:1.5;word-break:break-all;'><a href='${link}' style='color:#0a6b85;'>${link}</a></p><p style='margin:0;color:#9bb0bc;font-size:12px;line-height:1.6;border-top:1px solid #e3edf2;padding-top:16px;'>If you did not create a ClearCare+ account, you can safely ignore this email.</p></td></tr><tr><td style='background:#f5f9fc;padding:18px 32px;text-align:center;'><p style='margin:0;color:#9bb0bc;font-size:11px;'>ClearCare+ . Healthcare booking made clear.</p></td></tr></table></td></tr></table>`;\nreturn { json: { to: email, subject: 'Confirm your ClearCare+ email', fromEmail: 'clearcareplus.de@gmail.com', fromName: 'ClearCare+', html } };"
       },
-      "id": "f1a10003-0003-4aaa-bbbb-buildemailres01",
+      "id": "3bd821e0-72bb-4c12-86a9-50ae59a9d2e4",
       "name": "Build Confirmation Email (Resend)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3200,
-        2992
+        -432,
+        3072
       ]
     },
     {
@@ -827,18 +835,18 @@
         "jsonBody": "={\n  \"Messages\": [\n    {\n      \"From\": { \"Email\": \"{{ $json.fromEmail }}\", \"Name\": \"{{ $json.fromName }}\" },\n      \"To\": [ { \"Email\": \"{{ $json.to }}\" } ],\n      \"Subject\": \"{{ $json.subject }}\",\n      \"HTMLPart\": {{ JSON.stringify($json.html) }}\n    }\n  ]\n}",
         "options": {}
       },
-      "id": "f1a10004-0004-4aaa-bbbb-mailjetsendres1",
+      "id": "567515cb-6ae6-4c79-8cbd-22ceef35933e",
       "name": "Send via Mailjet (Resend)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3424,
-        2992
+        -208,
+        3072
       ],
       "credentials": {
         "httpBasicAuth": {
-          "id": "MAILJET_BASIC_AUTH",
-          "name": "Mailjet API (key:secret)"
+          "id": "poX0seROewnVCwiC",
+          "name": "Unnamed credential"
         }
       }
     },
@@ -848,13 +856,13 @@
         "responseBody": "={{ { \"status\": \"resent\" } }}",
         "options": {}
       },
-      "id": "ebc3fc77-0464-4717-a478-ec5b5815712c",
+      "id": "d75e5db9-ac4f-4471-9046-bb073a56ccfc",
       "name": "Respond Resend",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        3648,
-        2992
+        16,
+        3072
       ]
     },
     {
@@ -864,13 +872,13 @@
         "width": 544,
         "color": 2
       },
-      "id": "392d9ac5-bd1c-42de-be10-7f2bb60efdd0",
+      "id": "a4e0b8a3-088e-4822-a181-340c058802ba",
       "name": "Sticky Note 1ac",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        4128,
-        1280
+        496,
+        1360
       ]
     }
   ],
@@ -1165,12 +1173,11 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "4e8b4d4b-0349-4e60-a2ee-a0803364781a",
+  "versionId": "e87e65af-8801-4132-8e32-2b793a55decb",
   "meta": {
-    "templateCredsSetupCompleted": true,
     "instanceId": "be9b52dc8252215ea5a92389938ac9df68d87ce36092a9341a708e5263b4fcdb"
   },
   "nodeGroups": [],
-  "id": "xh69iloQa5EHgLke",
+  "id": "UoiEjg9Vsxotymhi",
   "tags": []
 }

@@ -16,9 +16,9 @@
 <p><strong>GitHub Repository:</strong> <a href="https://github.com/pcsphsb/clearcare-plus">github.com/pcsphsb/clearcare-plus</a><br>
 <strong>README:</strong> <a href="https://github.com/pcsphsb/clearcare-plus/blob/main/README.md">github.com/pcsphsb/clearcare-plus/blob/main/README.md</a><br>
 <strong>Live:</strong> <a href="https://pcsphsb.github.io/clearcare-plus/">pcsphsb.github.io/clearcare-plus</a><br>
-<strong>n8n:</strong> <a href="https://pcsphsb.app.n8n.cloud/workflow/xh69iloQa5EHgLke">ClearCare+ Complete Workflow</a></p>
+<strong>n8n:</strong> <a href="https://pcsphsb.app.n8n.cloud/workflow/UoiEjg9Vsxotymhi">ClearCare+ Complete Workflow</a></p>
 
-<p><em>The n8n link points to the team's private n8n Cloud workspace, so it opens only for an account with access. To open and run the workflow in your own account, import the exported file <code>Audit/Documentation/Workflow JSON SQL/ClearCare+ Complete Workflow.json</code> into your own n8n (Workflows, then Import from File). See Part D.</em></p>
+<p><em>The n8n link points to the team's private n8n Cloud workspace, so it opens only for an account with access. To open and run the workflow in your own account, import the exported file <code>Audit/Documentation/Workflow JSON SQL/ClearCare+ Complete Workflow.json</code> into your own n8n (Workflows, then Import from File). Please be informed that you must input your own service role key/secret key as the students have stripped that part from the json file for data security. See Part D.</em></p>
 
 <div style="page-break-after: always;"></div>
 
@@ -419,6 +419,9 @@ Two Supabase insert nodes wrote NULLs from wrong expressions.
 
 1. In n8n, go to Workflows, then Import from File, then `ClearCare+ Complete Workflow.json`.
 2. Re-link credentials if prompted (the Supabase and Groq nodes). They are mapped by name if they exist.
+
+> **Secrets redacted.** The exported JSON ships with all secrets stripped: the Supabase service-role key is replaced by the placeholder `YOUR_SUPABASE_SERVICE_ROLE_KEY`, and credential references (Supabase, Groq, Mailjet/Resend) carry no key material. n8n stores those in its own encrypted credential store, not in the export. After importing, supply your own keys via n8n **Credentials** (and replace any `YOUR_*` placeholder values) before activating. No live key is committed to this repository.
+
 3. Confirm each Webhook node has CORS `*` and Respond set to "Using Respond to Webhook node".
 4. **Activate** for production URLs and hands-free, or leave it inactive and use "Listen for test event" for a manual step-by-step demo.
 5. In `script.js`, set `USE_N8N=true` (and `N8N_PRODUCTION=false` for the manual walkthrough). Set it back to `false` for the standalone engine.
@@ -448,13 +451,13 @@ Reference the webhook explicitly in the User Message, because it sits after the 
 
 ### 26. n8n Workflow Files
 
-| File                                        | Role                                                                  |
-| ------------------------------------------- | --------------------------------------------------------------------- |
-| `ClearCare+ Complete Workflow.json`       | **Import this.** The consolidated 3-flow (plus FLOW 4) workflow |
-| `find-doctors-workflow.json`              | source export of the OSM flow (reference)                             |
-| `book-appointment-workflow.json`          | older standalone booking export (reference)                           |
-| `SQL/…`                                  | table/RLS setup (see Section 14 for the verified schema)              |
-| `Deprecated/translate-note-workflow.json` | archived; the translation feature was removed                         |
+| File                                        | Role                                                                                                                                                  |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ClearCare+ Complete Workflow.json`       | **Import this.** The consolidated 3-flow (plus FLOW 4) workflow. Secrets redacted to `YOUR_*` placeholders — supply your own keys on import. |
+| `find-doctors-workflow.json`              | source export of the OSM flow (reference)                                                                                                             |
+| `book-appointment-workflow.json`          | older standalone booking export (reference)                                                                                                           |
+| `SQL/…`                                  | table/RLS setup (see Section 14 for the verified schema)                                                                                              |
+| `Deprecated/translate-note-workflow.json` | archived; the translation feature was removed                                                                                                         |
 
 ---
 
